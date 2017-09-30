@@ -34,24 +34,27 @@ findTypeDecl name (ParsedSource (anns, locMod)) =
             case d of
               HsSyn.FamDecl fam ->
                 empty
-              HsSyn.SynDecl n tvs rhs fvs ->
-                empty
-              HsSyn.DataDecl n tvs rhs cusk fvs ->
-                case SrcLoc.unLoc n of
-                  RdrName.Unqual ocn ->
-                    if fastEq name (OccName.occNameFS ocn)
-                      then pure dec
-                      else empty
-                  RdrName.Qual _ ocn ->
-                    if fastEq name (OccName.occNameFS ocn)
-                      then pure dec
-                      else empty
-                  _ ->
-                    empty
+              HsSyn.SynDecl n tvs rhs fvs -> do
+                guard (compareName name n)
+                pure dec
+              HsSyn.DataDecl n tvs rhs cusk fvs -> do
+                guard (compareName name n)
+                pure dec
               HsSyn.ClassDecl ctx n tvs fds sigs meths ats atds docs fvs ->
                 empty
           _ ->
             empty
+
+compareName :: [Char] -> SrcLoc.Located RdrName.RdrName -> Bool
+compareName name n =
+  case SrcLoc.unLoc n of
+    RdrName.Unqual ocn ->
+      fastEq name (OccName.occNameFS ocn)
+    RdrName.Qual _ ocn ->
+      fastEq name (OccName.occNameFS ocn)
+    _ ->
+      False
+
 
 unOccName :: OccName.OccName -> [Char]
 unOccName ocn =
