@@ -96,6 +96,7 @@ module HGrep.Prelude (
   , comparing
   -- ** Traversable
   , Traversable (..)
+  , traverse_
 
   -- * Combinators
   , id
@@ -174,6 +175,7 @@ import           Data.Either as Either (
 import           Data.Foldable as Foldable (
            Foldable (..)
          , asum
+         , traverse_
          )
 import           Data.Function as Function (
            id

@@ -12,6 +12,7 @@ import           HGrep.Prelude
 import qualified Language.Haskell.GHC.ExactPrint as EP
 
 import qualified FastString
+import qualified HsBinds
 import qualified HsSyn
 import qualified OccName
 import qualified Outputable
@@ -35,19 +36,49 @@ findTypeDecl name (ParsedSource (anns, locMod)) =
               HsSyn.FamDecl fam ->
                 empty
               HsSyn.SynDecl n tvs rhs fvs -> do
-                guard (compareName name n)
+                guard (compareName name (SrcLoc.unLoc n))
                 pure dec
               HsSyn.DataDecl n tvs rhs cusk fvs -> do
-                guard (compareName name n)
+                guard (compareName name (SrcLoc.unLoc n))
                 pure dec
               HsSyn.ClassDecl ctx n tvs fds sigs meths ats atds docs fvs ->
                 empty
           _ ->
             empty
 
-compareName :: [Char] -> SrcLoc.Located RdrName.RdrName -> Bool
+findValueDecl :: [Char] -> ParsedSource -> [Char]
+findValueDecl name (ParsedSource (anns, locMod)) =
+  let
+    modl = SrcLoc.unLoc locMod
+    decls = HsSyn.hsmodDecls modl
+    print ast = EP.exactPrint ast anns
+  in
+    L.unlines . fmap print . catMaybes . with decls $ \ldec ->
+      sequenceA . with ldec $ \dec ->
+        case dec of
+          HsSyn.ValD d ->
+            case d of
+              HsBinds.FunBind n pats co fvs tick -> do
+                guard (compareName name (SrcLoc.unLoc n))
+                pure dec
+              HsBinds.VarBind n rhs inl -> do
+                guard (compareName name n)
+                pure dec
+              _ ->
+                empty
+          HsSyn.SigD d ->
+            case d of
+              HsBinds.TypeSig ns wct -> do
+                traverse_ (guard . compareName name. SrcLoc.unLoc) ns
+                pure dec
+              _ ->
+                empty
+          _ ->
+            empty
+
+compareName :: [Char] -> RdrName.RdrName -> Bool
 compareName name n =
-  case SrcLoc.unLoc n of
+  case n of
     RdrName.Unqual ocn ->
       fastEq name (OccName.occNameFS ocn)
     RdrName.Qual _ ocn ->

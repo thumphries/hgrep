@@ -17,6 +17,7 @@ grepFile hs name =
   void . runEitherT $ do
     modl <- parseModule hs
     liftIO $ IO.putStrLn (HG.findTypeDecl name modl)
+    liftIO $ IO.putStrLn (HG.findValueDecl name modl)
     pure ()
 
 parseModule :: FilePath -> EitherT ParseError IO ParsedSource
