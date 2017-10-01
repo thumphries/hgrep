@@ -57,6 +57,7 @@ module HGrep.Prelude (
   -- * Data structures
   -- ** Either
   , Either (..)
+  , either
   , note
   -- *** EitherT
   , EitherT
@@ -106,6 +107,7 @@ module HGrep.Prelude (
   , id
   , (.)
   , ($)
+  , ($!)
   , (&)
   , const
   , flip
@@ -176,6 +178,7 @@ import           Data.Char as Char (
          )
 import           Data.Either as Either (
            Either (..)
+         , either
          )
 import           Data.Foldable as Foldable (
            Foldable (..)
@@ -246,6 +249,7 @@ import           GHC.Stack (HasCallStack)
 import           Prelude as Prelude (
            Enum (..)
          , seq
+         , ($!)
          )
 import qualified Prelude as Unsafe
 
