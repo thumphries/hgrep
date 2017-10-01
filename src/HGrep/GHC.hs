@@ -19,6 +19,7 @@ import qualified Language.Haskell.HsColour.Colourise as HsColour
 
 import qualified FastString
 import qualified OccName
+import qualified Outputable
 import qualified RdrName
 
 
@@ -65,8 +66,8 @@ compareName name n =
 
 printSearchResult :: SearchResult -> [Char]
 printSearchResult (SearchResult anns ast) =
-  L.unlines [
-      show (ast ^. _loc)
+  L.concat [
+      unsafePpr (ast ^. _loc)
     , hscolour (EP.exactPrint ast anns)
     ]
 
@@ -85,3 +86,7 @@ match a ps =
 hscolour :: [Char] -> [Char]
 hscolour =
   HsColour.hscolour HsColour.TTY HsColour.defaultColourPrefs False False "" False
+
+unsafePpr :: Outputable.Outputable o => o -> [Char]
+unsafePpr =
+  Outputable.showSDocUnsafe . Outputable.ppr
