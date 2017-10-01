@@ -19,7 +19,7 @@ rules =
     & set' generateSignatures True
 
 namer :: FieldNamer
-namer _ _fields field =
+namer _tn _fields field =
   [TopName (mkName ("_" <> nameBase field))]
 
 makeOptics :: Name -> DecsQ

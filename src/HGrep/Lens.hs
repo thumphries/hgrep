@@ -19,6 +19,7 @@ import           HsBinds
 import           HsDecls
 import           HsExpr
 import           HsLit
+import           HsSyn
 import           HsTypes
 import           OccName
 import           RdrName
@@ -35,6 +36,8 @@ _unloc = _L . _2
 
 makeOptics ''OccName
 makeOptics ''RdrName
+
+makeOptics ''HsModule
 
 makeOptics ''HsDecl
 makeOptics ''TyClDecl
