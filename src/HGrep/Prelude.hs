@@ -36,6 +36,7 @@ module HGrep.Prelude (
   , Bifunctor (..)
   -- ** Applicative
   , Applicative (..)
+  , (<**>)
   -- ** Alternative
   , Alternative (..)
   , asum
@@ -90,13 +91,16 @@ module HGrep.Prelude (
   , Show (..)
   -- ** Foldable
   , Foldable (..)
+  , for_
   -- ** Ord
   , Ord (..)
   , Ordering (..)
   , comparing
   -- ** Traversable
   , Traversable (..)
+  , for
   , traverse_
+
 
   -- * Combinators
   , id
@@ -151,6 +155,7 @@ import           Control.Monad.Trans.Maybe as MaybeT (
          )
 import           Control.Applicative as Applicative (
            Applicative (..)
+         , (<**>)
          , Alternative (..)
          , empty
          )
@@ -176,6 +181,7 @@ import           Data.Foldable as Foldable (
            Foldable (..)
          , asum
          , traverse_
+         , for_
          )
 import           Data.Function as Function (
            id
@@ -219,6 +225,7 @@ import           Data.Ord as Ord (
          )
 import           Data.Traversable as Traversable (
            Traversable (..)
+         , for
          )
 import           Data.Tuple as Tuple (
            fst

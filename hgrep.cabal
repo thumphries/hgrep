@@ -14,6 +14,8 @@ executable hgrep
   main-is:           hgrep.hs
   build-depends:
                      base                           >= 4.9           && < 4.11
+                   , hgrep
+                   , optparse-applicative           >= 0.13          && < 0.15
 
 library
   default-language:  Haskell2010

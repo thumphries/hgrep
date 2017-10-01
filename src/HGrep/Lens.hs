@@ -20,7 +20,6 @@ import           HsDecls
 import           HsExpr
 import           HsLit
 import           HsSyn
-import           HsTypes
 import           OccName
 import           RdrName
 import           SrcLoc
