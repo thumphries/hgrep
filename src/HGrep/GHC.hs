@@ -14,6 +14,8 @@ import           HGrep.Lens
 import           HGrep.Prelude
 
 import qualified Language.Haskell.GHC.ExactPrint as EP
+import qualified Language.Haskell.HsColour as HsColour
+import qualified Language.Haskell.HsColour.Colourise as HsColour
 
 import qualified FastString
 import qualified OccName
@@ -24,7 +26,7 @@ findTypeDecl :: [Char] -> ParsedSource -> [Char]
 findTypeDecl name (ParsedSource (anns, locMod)) =
   let
     decls = locMod ^. _unloc . _hsmodDecls
-    print ast = EP.exactPrint ast anns
+    print ast = hscolour (EP.exactPrint ast anns)
   in
     L.unlines . fmap print . catMaybes . with decls $ \ldec ->
       sequenceA . with ldec $ \dec -> do
@@ -39,7 +41,7 @@ findValueDecl :: [Char] -> ParsedSource -> [Char]
 findValueDecl name (ParsedSource (anns, locMod)) =
   let
     decls = locMod ^. _unloc . _hsmodDecls
-    print ast = EP.exactPrint ast anns
+    print ast = hscolour (EP.exactPrint ast anns)
   in
     L.unlines . fmap print . catMaybes . with decls $ \ldec ->
       sequenceA . with ldec $ \dec -> do
@@ -74,3 +76,7 @@ fastEq s fs =
 match :: Foldable t => s -> t (Getting (First a) s a) -> Maybe a
 match a ps =
   preview (fold ps) a
+
+hscolour :: [Char] -> [Char]
+hscolour =
+  HsColour.hscolour HsColour.TTY HsColour.defaultColourPrefs False False "" False
