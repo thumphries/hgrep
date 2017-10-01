@@ -23,6 +23,8 @@ library
                      base                           >= 4.9           && < 4.11
                    , ghc                            >= 7.10.2        && < 8.3
                    , ghc-exactprint                 == 0.5.*
+                   , lens                           >= 4.15          && < 4.16
+                   , template-haskell               >= 2.11          && < 2.13
                    , transformers                   >= 0.5           && < 0.7
                    , transformers-bifunctors        >= 0.1           && < 1.0
 
@@ -30,4 +32,6 @@ library
                      HGrep
                      HGrep.Data
                      HGrep.GHC
+                     HGrep.Lens
+                     HGrep.Lens.Rules
                      HGrep.Prelude
