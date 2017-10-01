@@ -1,6 +1,8 @@
+{-# LANGUAGE ExistentialQuantification #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE RankNTypes #-}
 module HGrep.Data where
 
 
@@ -9,7 +11,10 @@ import qualified SrcLoc
 
 import           HGrep.Prelude
 
+import qualified Language.Haskell.GHC.ExactPrint.Annotater as EA
 import qualified Language.Haskell.GHC.ExactPrint.Types as ET
+
+import qualified SrcLoc
 
 
 newtype ParsedSource = ParsedSource {
@@ -19,3 +24,7 @@ newtype ParsedSource = ParsedSource {
 newtype ParseError = ParseError {
     unParseError :: (SrcLoc.SrcSpan, [Char])
   }
+
+data SearchResult =
+  forall ast. EA.Annotate ast =>
+    SearchResult ET.Anns (SrcLoc.Located ast)

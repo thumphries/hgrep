@@ -16,10 +16,14 @@ grepFile :: FilePath -> [Char] -> IO ()
 grepFile hs name =
   void . runEitherT $ do
     modl <- parseModule hs
-    liftIO $ IO.putStrLn (HG.findTypeDecl name modl)
-    liftIO $ IO.putStrLn (HG.findValueDecl name modl)
+    liftIO $ printSearchResults (HG.findTypeDecl name modl)
+    liftIO $ printSearchResults (HG.findValueDecl name modl)
     pure ()
 
 parseModule :: FilePath -> EitherT ParseError IO ParsedSource
 parseModule hs =
   bimapT ParseError ParsedSource . EitherT $ EP.parseModule hs
+
+printSearchResults :: [SearchResult] -> IO ()
+printSearchResults =
+  traverse_ (IO.putStrLn . HG.printSearchResult)

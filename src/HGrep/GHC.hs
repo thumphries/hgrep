@@ -22,13 +22,12 @@ import qualified OccName
 import qualified RdrName
 
 
-findTypeDecl :: [Char] -> ParsedSource -> [Char]
+findTypeDecl :: [Char] -> ParsedSource -> [SearchResult]
 findTypeDecl name (ParsedSource (anns, locMod)) =
   let
     decls = locMod ^. _unloc . _hsmodDecls
-    print ast = hscolour (EP.exactPrint ast anns)
   in
-    L.unlines . fmap print . catMaybes . with decls $ \ldec ->
+    fmap (SearchResult anns) . catMaybes . with decls $ \ldec ->
       sequenceA . with ldec $ \dec -> do
         n <- match dec [
             _TyClD . _DataDecl . _1 . _unloc
@@ -37,13 +36,12 @@ findTypeDecl name (ParsedSource (anns, locMod)) =
         guard (compareName name n)
         pure dec
 
-findValueDecl :: [Char] -> ParsedSource -> [Char]
+findValueDecl :: [Char] -> ParsedSource -> [SearchResult]
 findValueDecl name (ParsedSource (anns, locMod)) =
   let
     decls = locMod ^. _unloc . _hsmodDecls
-    print ast = hscolour (EP.exactPrint ast anns)
   in
-    L.unlines . fmap print . catMaybes . with decls $ \ldec ->
+    fmap (SearchResult anns) . catMaybes . with decls $ \ldec ->
       sequenceA . with ldec $ \dec -> do
         n <- match dec [
             _ValD . _FunBind . _1 . _unloc
@@ -64,6 +62,13 @@ compareName name n =
     _ ->
       False
 
+
+printSearchResult :: SearchResult -> [Char]
+printSearchResult (SearchResult anns ast) =
+  L.unlines [
+      show (ast ^. _loc)
+    , hscolour (EP.exactPrint ast anns)
+    ]
 
 unOccName :: OccName.OccName -> [Char]
 unOccName ocn =
