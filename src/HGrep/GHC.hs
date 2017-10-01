@@ -1,12 +1,18 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
-module HGrep.GHC where
+{-# LANGUAGE RankNTypes #-}
+module HGrep.GHC (
+    findTypeDecl
+  , findValueDecl
+  , printSearchResult
+  ) where
 
 
 import           Control.Lens
 
+import           Data.Foldable (any)
 import qualified Data.List as L
-import           Data.Maybe (catMaybes)
+import           Data.Maybe (fromMaybe)
 import           Data.Monoid (First)
 
 import           HGrep.Data
@@ -18,40 +24,32 @@ import qualified Language.Haskell.HsColour as HsColour
 import qualified Language.Haskell.HsColour.Colourise as HsColour
 
 import qualified FastString
+import qualified HsDecls
 import qualified OccName
 import qualified Outputable
 import qualified RdrName
+import           SrcLoc (unLoc)
 
 
 findTypeDecl :: [Char] -> ParsedSource -> [SearchResult]
-findTypeDecl name (ParsedSource (anns, locMod)) =
-  let
-    decls = locMod ^. _unloc . _hsmodDecls
-  in
-    fmap (SearchResult anns) . catMaybes . with decls $ \ldec ->
-      sequenceA . with ldec $ \dec -> do
-        n <- match dec [
-            _TyClD . _DataDecl . _1 . _unloc
-          , _TyClD . _SynDecl  . _1 . _unloc
-          ]
-        guard (compareName name n)
-        pure dec
+findTypeDecl name src =
+  matchDecls src $ \decl ->
+    fromMaybe False . match decl $
+         _TyClD . _DataDecl . _1 . _unloc . to (compareName name)
+      <> _TyClD . _SynDecl . _1 . _unloc . to (compareName name)
 
 findValueDecl :: [Char] -> ParsedSource -> [SearchResult]
-findValueDecl name (ParsedSource (anns, locMod)) =
-  let
-    decls = locMod ^. _unloc . _hsmodDecls
-  in
-    fmap (SearchResult anns) . catMaybes . with decls $ \ldec ->
-      sequenceA . with ldec $ \dec -> do
-        n <- match dec [
-            _ValD . _FunBind . _1 . _unloc
-          , _ValD . _VarBind . _1
--- FIXME list of names here
---          , _SigD . _TypeSig . _1
-          ]
-        guard (compareName name n)
-        pure dec
+findValueDecl name src =
+  matchDecls src $ \decl ->
+    fromMaybe False . match decl $
+         _ValD . _FunBind . _1 . _unloc . to (compareName name)
+      <> _ValD . _VarBind . _1 . to (compareName name)
+      <> _SigD . _TypeSig . _1 . to (any (compareName name . unLoc))
+
+matchDecls :: ParsedSource -> (HsDecls.HsDecl RdrName.RdrName -> Bool) -> [SearchResult]
+matchDecls (ParsedSource (anns, locMod)) p =
+  fmap (SearchResult anns) $
+    L.filter (p . unLoc) (locMod ^. _unloc . _hsmodDecls)
 
 compareName :: [Char] -> RdrName.RdrName -> Bool
 compareName name n =
@@ -63,7 +61,6 @@ compareName name n =
     _ ->
       False
 
-
 printSearchResult :: SearchResult -> [Char]
 printSearchResult (SearchResult anns ast) =
   L.concat [
@@ -71,17 +68,14 @@ printSearchResult (SearchResult anns ast) =
     , hscolour (EP.exactPrint ast anns)
     ]
 
-unOccName :: OccName.OccName -> [Char]
-unOccName ocn =
-  FastString.unpackFS (OccName.occNameFS ocn)
-
 fastEq :: [Char] -> FastString.FastString -> Bool
 fastEq s fs =
   FastString.mkFastString s == fs
 
-match :: Foldable t => s -> t (Getting (First a) s a) -> Maybe a
-match a ps =
-  preview (fold ps) a
+match :: s -> Getting (First a) s a -> Maybe a
+match =
+  flip preview
+{-# INLINE match #-}
 
 hscolour :: [Char] -> [Char]
 hscolour =
