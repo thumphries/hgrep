@@ -38,9 +38,9 @@ library
   exposed-modules:
                      Language.Haskell.HGrep
                      Language.Haskell.HGrep.Data
+                     Language.Haskell.HGrep.Query
                      Language.Haskell.HGrep.Prelude
 
-  other-modules:
-                     Language.Haskell.HGrep.GHC
-                     Language.Haskell.HGrep.Lens
-                     Language.Haskell.HGrep.Lens.Rules
+                     Language.Haskell.HGrep.Internal.Data
+                     Language.Haskell.HGrep.Internal.Lens
+                     Language.Haskell.HGrep.Internal.Lens.Rules

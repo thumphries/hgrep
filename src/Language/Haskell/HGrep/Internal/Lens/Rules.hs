@@ -1,6 +1,6 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
-module Language.Haskell.HGrep.Lens.Rules where
+module Language.Haskell.HGrep.Internal.Lens.Rules where
 
 
 import           Control.Lens
