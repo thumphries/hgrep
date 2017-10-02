@@ -4,7 +4,6 @@
 module Language.Haskell.HGrep.Query (
     findTypeDecl
   , findValueDecl
-  , printSearchResult
   ) where
 
 
@@ -19,14 +18,9 @@ import           Language.Haskell.HGrep.Internal.Data
 import           Language.Haskell.HGrep.Internal.Lens
 import           Language.Haskell.HGrep.Prelude
 
-import qualified Language.Haskell.GHC.ExactPrint as EP
-import qualified Language.Haskell.HsColour as HsColour
-import qualified Language.Haskell.HsColour.Colourise as HsColour
-
 import qualified FastString
 import qualified HsDecls
 import qualified OccName
-import qualified Outputable
 import qualified RdrName
 import           SrcLoc (unLoc)
 
@@ -61,13 +55,6 @@ compareName name n =
     _ ->
       False
 
-printSearchResult :: SearchResult -> [Char]
-printSearchResult (SearchResult anns ast) =
-  L.concat [
-      unsafePpr (ast ^. _loc)
-    , hscolour (EP.exactPrint ast anns)
-    ]
-
 fastEq :: [Char] -> FastString.FastString -> Bool
 fastEq s fs =
   FastString.mkFastString s == fs
@@ -76,11 +63,3 @@ match :: s -> Getting (First a) s a -> Maybe a
 match =
   flip preview
 {-# INLINE match #-}
-
-hscolour :: [Char] -> [Char]
-hscolour =
-  HsColour.hscolour HsColour.TTY HsColour.defaultColourPrefs False False "" False
-
-unsafePpr :: Outputable.Outputable o => o -> [Char]
-unsafePpr =
-  Outputable.showSDocUnsafe . Outputable.ppr

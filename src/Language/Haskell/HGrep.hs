@@ -4,6 +4,7 @@ module Language.Haskell.HGrep where
 
 
 import           Language.Haskell.HGrep.Internal.Data
+import qualified Language.Haskell.HGrep.Print as HP
 import qualified Language.Haskell.HGrep.Query as HQ
 import           Language.Haskell.HGrep.Prelude
 
@@ -26,4 +27,4 @@ parseModule hs =
 
 printSearchResults :: [SearchResult] -> IO ()
 printSearchResults =
-  traverse_ (IO.putStrLn . HQ.printSearchResult)
+  traverse_ (IO.putStrLn . HP.printSearchResult)

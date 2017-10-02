@@ -1,15 +1,24 @@
 name:                hgrep
-version:             0.0.0.0
+version:             0.0
 homepage:            https://github.com/thumphries/hgrep
 author:              Tim Humphries
 maintainer:          tim@utf8.me
+bug-reports:         https://github.com/thumphries/hgrep
 license:             BSD3
 license-file:        LICENSE
-build-type:          Simple
-cabal-version:       >=1.10
 category:            Language
 synopsis:            Search Haskell source code from the command line
 description:         Search Haskell source code from the command line
+build-type:          Simple
+cabal-version:       >=1.10
+
+extra-source-files:
+                     README.md
+                     CHANGELOG.md
+
+source-repository head
+  type: git
+  location: git://github.com/thumphries/hgrep.git
 
 executable hgrep
   default-language:  Haskell2010
@@ -40,6 +49,7 @@ library
                      Language.Haskell.HGrep.Data
                      Language.Haskell.HGrep.Query
                      Language.Haskell.HGrep.Prelude
+                     Language.Haskell.HGrep.Print
 
                      Language.Haskell.HGrep.Internal.Data
                      Language.Haskell.HGrep.Internal.Lens
