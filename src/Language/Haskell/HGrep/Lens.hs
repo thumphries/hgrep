@@ -7,13 +7,13 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TypeSynonymInstances #-}
 {-# LANGUAGE UndecidableInstances #-}
-module HGrep.Lens where
+module Language.Haskell.HGrep.Lens where
 
 
 import           Control.Lens
 
-import           HGrep.Lens.Rules (makeOptics)
-import           HGrep.Prelude
+import           Language.Haskell.HGrep.Lens.Rules (makeOptics)
+import           Language.Haskell.HGrep.Prelude
 
 import           HsBinds
 import           HsDecls

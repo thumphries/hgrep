@@ -1,7 +1,7 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RankNTypes #-}
-module HGrep.GHC (
+module Language.Haskell.HGrep.GHC (
     findTypeDecl
   , findValueDecl
   , printSearchResult
@@ -15,9 +15,9 @@ import qualified Data.List as L
 import           Data.Maybe (fromMaybe)
 import           Data.Monoid (First)
 
-import           HGrep.Data
-import           HGrep.Lens
-import           HGrep.Prelude
+import           Language.Haskell.HGrep.Data
+import           Language.Haskell.HGrep.Lens
+import           Language.Haskell.HGrep.Prelude
 
 import qualified Language.Haskell.GHC.ExactPrint as EP
 import qualified Language.Haskell.HsColour as HsColour

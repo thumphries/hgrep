@@ -1,11 +1,11 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
-module HGrep.Lens.Rules where
+module Language.Haskell.HGrep.Lens.Rules where
 
 
 import           Control.Lens
 
-import           HGrep.Prelude
+import           Language.Haskell.HGrep.Prelude
 
 import           Language.Haskell.TH (Name, DecsQ, mkName, nameBase)
 

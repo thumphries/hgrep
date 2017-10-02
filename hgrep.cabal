@@ -36,9 +36,9 @@ library
                    , transformers-bifunctors        >= 0.1           && < 1.0
 
   exposed-modules:
-                     HGrep
-                     HGrep.Data
-                     HGrep.GHC
-                     HGrep.Lens
-                     HGrep.Lens.Rules
-                     HGrep.Prelude
+                     Language.Haskell.HGrep
+                     Language.Haskell.HGrep.Data
+                     Language.Haskell.HGrep.GHC
+                     Language.Haskell.HGrep.Lens
+                     Language.Haskell.HGrep.Lens.Rules
+                     Language.Haskell.HGrep.Prelude

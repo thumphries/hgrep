@@ -3,8 +3,8 @@
 module Main where
 
 
-import qualified HGrep as HGrep
-import           HGrep.Prelude
+import qualified Language.Haskell.HGrep as HGrep
+import           Language.Haskell.HGrep.Prelude
 
 import qualified Options.Applicative as O
 

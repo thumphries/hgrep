@@ -1,11 +1,11 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
-module HGrep where
+module Language.Haskell.HGrep where
 
 
-import           HGrep.Data
-import qualified HGrep.GHC as HG
-import           HGrep.Prelude
+import           Language.Haskell.HGrep.Data
+import qualified Language.Haskell.HGrep.GHC as HG
+import           Language.Haskell.HGrep.Prelude
 
 import qualified Language.Haskell.GHC.ExactPrint as EP
 

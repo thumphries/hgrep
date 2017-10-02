@@ -3,17 +3,15 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RankNTypes #-}
-module HGrep.Data where
+module Language.Haskell.HGrep.Data where
 
 
-import qualified GHC
-import qualified SrcLoc
-
-import           HGrep.Prelude
+import           Language.Haskell.HGrep.Prelude
 
 import qualified Language.Haskell.GHC.ExactPrint.Annotater as EA
 import qualified Language.Haskell.GHC.ExactPrint.Types as ET
 
+import qualified GHC
 import qualified SrcLoc
 
 

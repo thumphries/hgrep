@@ -2,7 +2,7 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE PatternSynonyms #-}
-module HGrep.Prelude (
+module Language.Haskell.HGrep.Prelude (
   -- * Primitive types
   -- ** Bool
     Bool (..)
