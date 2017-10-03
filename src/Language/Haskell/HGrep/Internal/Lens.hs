@@ -53,6 +53,11 @@ makeOptics ''SpliceDecl
 makeOptics ''DocDecl
 makeOptics ''RoleAnnotDecl
 
+makeOptics ''HsDataDefn
+makeOptics ''ConDecl
+makeOptics ''HsImplicitBndrs
+makeOptics ''HsConDetails
+
 makeOptics ''HsBindLR
 
 makeOptics ''HsExpr
@@ -63,3 +68,5 @@ makeOptics ''StmtLR
 makeOptics ''HsLit
 
 makeOptics ''HsType
+makeOptics ''ConDeclField
+makeOptics ''FieldOcc
