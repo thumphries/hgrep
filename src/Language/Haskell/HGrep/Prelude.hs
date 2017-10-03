@@ -14,6 +14,7 @@ module Language.Haskell.HGrep.Prelude (
   -- ** Char
   , Char
   -- ** Int
+  , Integer
   , Int
   , Int8
   , Int16
@@ -21,6 +22,9 @@ module Language.Haskell.HGrep.Prelude (
   , Int64
   -- ** Word
   , Word64
+  -- ** Real
+  , fromIntegral
+  , fromRational
 
   -- * Algebraic structures
   -- ** Monoid
@@ -90,6 +94,9 @@ module Language.Haskell.HGrep.Prelude (
   , readMaybe
   -- ** Show
   , Show (..)
+  -- *** ShowS
+  , ShowS
+  , showString
   -- ** Foldable
   , Foldable (..)
   , for_
@@ -192,7 +199,7 @@ import           Data.Function as Function (
          , ($)
          , (&)
          , const
-         , flip 
+         , flip
          , fix
          , on
          )
@@ -242,12 +249,17 @@ import           Data.Word as Word (
 
 import qualified Debug.Trace as Trace
 
+import           GHC.Real as Real (
+           fromIntegral
+         , fromRational
+         )
 #if MIN_VERSION_base(4,9,0)
 import           GHC.Stack (HasCallStack)
 #endif
 
 import           Prelude as Prelude (
            Enum (..)
+         , Integer
          , seq
          , ($!)
          )
@@ -265,6 +277,8 @@ import           Text.Read as Read (
          )
 import           Text.Show as Show (
            Show (..)
+         , ShowS
+         , showString
          )
 
 

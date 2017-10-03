@@ -33,6 +33,7 @@ executable hgrep
   build-depends:
                      base                           >= 4.9           && < 4.11
                    , hgrep
+                   , ansi-terminal                  >= 0.6.3         && < 0.8
                    , optparse-applicative           >= 0.13          && < 0.15
 
 library
@@ -41,9 +42,10 @@ library
   ghc-options:       -Wall
   build-depends:
                      base                           >= 4.9           && < 4.11
+                   , ansi-terminal                  >= 0.6.3         && < 0.8
                    , ghc                            >= 7.10.2        && < 8.3
-                   , ghc-exactprint                 == 0.5.*
-                   , hscolour                       == 1.24.*
+                   , ghc-exactprint                 >= 0.5           && < 0.6
+                   , hscolour                       >= 1.24          && < 1.25
                    , lens                           >= 4.15          && < 4.16
                    , template-haskell               >= 2.11          && < 2.13
                    , transformers                   >= 0.5           && < 0.7
@@ -51,7 +53,6 @@ library
 
   exposed-modules:
                      Language.Haskell.HGrep
-                     Language.Haskell.HGrep.Data
                      Language.Haskell.HGrep.Query
                      Language.Haskell.HGrep.Prelude
                      Language.Haskell.HGrep.Print

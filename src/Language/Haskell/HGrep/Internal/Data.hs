@@ -3,7 +3,15 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RankNTypes #-}
-module Language.Haskell.HGrep.Internal.Data where
+module Language.Haskell.HGrep.Internal.Data (
+    ParsedSource (..)
+  , ParseError (..)
+  , Query
+  , SearchResult (..)
+  , PrintOpts (..)
+  , defaultPrintOpts
+  , ColourOpts (..)
+  ) where
 
 
 import           Language.Haskell.HGrep.Prelude
@@ -23,6 +31,23 @@ newtype ParseError = ParseError {
     unParseError :: (SrcLoc.SrcSpan, [Char])
   }
 
+type Query = [Char]
+
 data SearchResult =
   forall ast. EA.Annotate ast =>
     SearchResult ET.Anns (SrcLoc.Located ast)
+
+data PrintOpts = PrintOpts {
+    poColourOpts :: ColourOpts
+  } deriving (Eq, Ord, Show)
+
+data ColourOpts =
+    DefaultColours
+  | NoColours
+  deriving (Eq, Ord, Show)
+
+defaultPrintOpts :: PrintOpts
+defaultPrintOpts =
+  PrintOpts {
+      poColourOpts = DefaultColours
+    }

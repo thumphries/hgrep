@@ -1,6 +1,21 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
-module Language.Haskell.HGrep where
+module Language.Haskell.HGrep (
+  -- * Parsing
+    ParsedSource
+  , parseModule
+  -- * Searching
+  , Query
+  , SearchResult
+  , queryModule
+  -- * Printing
+  , PrintOpts (..)
+  , defaultPrintOpts
+  , ColourOpts (..)
+  , printResults
+  , HP.printSearchResult
+  , HP.printSearchResultLocation
+  ) where
 
 
 import           Language.Haskell.HGrep.Internal.Data
@@ -13,18 +28,18 @@ import qualified Language.Haskell.GHC.ExactPrint as EP
 import qualified System.IO as IO
 
 
-grepFile :: FilePath -> [Char] -> IO ()
-grepFile hs name =
-  void . runEitherT $ do
-    modl <- parseModule hs
-    liftIO $ printSearchResults (HQ.findTypeDecl name modl)
-    liftIO $ printSearchResults (HQ.findValueDecl name modl)
-    pure ()
-
-parseModule :: FilePath -> EitherT ParseError IO ParsedSource
+parseModule :: FilePath -> IO (Either ParseError ParsedSource)
 parseModule hs =
-  bimapT ParseError ParsedSource . EitherT $ EP.parseModule hs
+  bimap ParseError ParsedSource <$> EP.parseModule hs
 
-printSearchResults :: [SearchResult] -> IO ()
-printSearchResults =
-  traverse_ (IO.putStrLn . HP.printSearchResult)
+queryModule :: Query -> ParsedSource -> [SearchResult]
+queryModule q src =
+  (<>)
+    (HQ.findTypeDecl q src)
+    (HQ.findValueDecl q src)
+
+printResults :: PrintOpts -> [SearchResult] -> IO ()
+printResults opts results =
+  for_ results $ \res -> do
+    IO.hPutStr IO.stdout (HP.printSearchResultLocation opts res)
+    IO.hPutStrLn IO.stdout (HP.printSearchResult opts res)
