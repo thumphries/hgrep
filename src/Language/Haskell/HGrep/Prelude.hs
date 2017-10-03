@@ -51,10 +51,6 @@ module Language.Haskell.HGrep.Prelude (
   , MonadPlus (..)
   , guard
   , msum
-  -- ** MonadTrans
-  , MonadTrans (..)
-  -- ** BifunctorTrans
-  , BifunctorTrans (..)
   -- ** MonadIO
   , MonadIO (..)
 
@@ -63,20 +59,11 @@ module Language.Haskell.HGrep.Prelude (
   , Either (..)
   , either
   , note
-  -- *** EitherT
-  , EitherT
-  , pattern EitherT
-  , runEitherT
-  , left
-  , right
   -- ** Maybe
   , Maybe (..)
   , fromMaybe
   , maybe
   , hush
-  -- *** MaybeT
-  , MaybeT (..)
-  , nothing
   -- ** Tuple
   , fst
   , snd
@@ -147,20 +134,6 @@ import           Control.Monad as Monad (
          )
 import           Control.Monad.IO.Class (
            MonadIO (..)
-         )
-import           Control.Monad.Trans.Bifunctor as BifunctorTrans (
-           BifunctorTrans (..)
-         )
-import           Control.Monad.Trans.Class as MonadTrans (
-           MonadTrans (..)
-         )
-import           Control.Monad.Trans.Except as ExceptT (
-           ExceptT (..)
-         , runExceptT
-         , throwE
-         )
-import           Control.Monad.Trans.Maybe as MaybeT (
-           MaybeT (..)
          )
 import           Control.Applicative as Applicative (
            Applicative (..)
@@ -335,27 +308,3 @@ hush :: Either a b -> Maybe b
 hush (Left _) = Nothing
 hush (Right b) = Just b
 {-# INLINEABLE hush #-}
-
-type EitherT = ExceptT
-pattern EitherT :: m (Either e a) -> ExceptT e m a
-pattern EitherT m = ExceptT m
-
-runEitherT :: EitherT e m a -> m (Either e a)
-runEitherT =
-  ExceptT.runExceptT
-{-# INLINE runEitherT #-}
-
-left :: Monad m => x -> EitherT x m a
-left =
-  throwE
-{-# INLINE left #-}
-
-right :: Monad m => a -> EitherT x m a
-right =
-  return
-{-# INLINE right #-}
-
-nothing :: Monad m => MaybeT m a
-nothing =
-  MaybeT (return Nothing)
-{-# INLINE nothing #-}
