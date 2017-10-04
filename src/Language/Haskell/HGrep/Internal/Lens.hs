@@ -21,7 +21,6 @@ import           HsExpr
 import           HsLit
 import           HsSyn
 import           Name
-import           OccName
 import           RdrName
 import           SrcLoc
 
