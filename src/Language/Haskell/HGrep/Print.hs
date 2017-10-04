@@ -1,7 +1,8 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
 module Language.Haskell.HGrep.Print (
-    printSearchResult
+    printParseError
+  , printSearchResult
   , printSearchResultLocation
   ) where
 
@@ -20,6 +21,13 @@ import qualified System.Console.ANSI as ANSI
 import qualified Outputable
 import qualified SrcLoc
 
+
+printParseError :: ParseError -> [Char]
+printParseError (ParseError (loc, msg)) =
+  L.intercalate ": " [
+      unsafePpr loc
+    , msg
+    ]
 
 printSearchResult :: PrintOpts -> SearchResult -> [Char]
 printSearchResult (PrintOpts co) (SearchResult anns ast) =
