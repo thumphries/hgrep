@@ -3,6 +3,8 @@
 module Main where
 
 
+import qualified Data.ByteString.Char8 as B8
+
 import qualified Language.Haskell.HGrep as HGrep
 import           Language.Haskell.HGrep.Prelude
 
@@ -12,6 +14,8 @@ import qualified System.Console.ANSI as ANSI
 import           System.Exit (ExitCode (..), exitWith)
 import qualified System.IO as IO
 
+import qualified Text.Regex.PCRE.Heavy as PCRE
+
 
 main :: IO ()
 main = do
@@ -19,11 +23,16 @@ main = do
   IO.hSetBuffering IO.stderr IO.LineBuffering
   opts <- parseOpts
   colour <- detectColour
-  found <-
-    fmap sum $
-      for (cmdFiles opts) $ \fp ->
-        hgrep (HGrep.PrintOpts colour) (cmdQuery opts) fp
-  exitWith (exitCode found)
+  case parseQuery (cmdQuery opts) (cmdRegex opts) of
+    Left er -> do
+      IO.hPutStrLn IO.stderr er
+      exitWith (ExitFailure 2)
+    Right q -> do
+      found <-
+        fmap sum $
+          for (cmdFiles opts) $ \fp ->
+            hgrep (HGrep.PrintOpts colour) q fp
+      exitWith (exitCode found)
 
 exitCode :: Integer -> ExitCode
 exitCode found
@@ -49,14 +58,24 @@ hgrep popts q fp = do
       pure 0
 
     Right src -> do
-      let results = HGrep.queryModule (HGrep.MatchSimple q) src
+      let results = HGrep.queryModule q src
       HGrep.printResults popts results
       pure $ fromIntegral (length results)
+
+
+parseQuery :: [Char] -> Bool -> Either [Char] HGrep.Query
+parseQuery str regex =
+  case regex of
+    True ->
+      HGrep.MatchRegex <$> PCRE.compileM (B8.pack str) []
+    False ->
+      pure $ HGrep.MatchSimple str
 
 -- -----------------------------------------------------------------------------
 
 data CmdOpts = CmdOpts {
     cmdQuery :: [Char]
+  , cmdRegex :: Bool
   , cmdFiles :: [FilePath]
   } deriving (Eq, Ord, Show)
 
@@ -71,4 +90,6 @@ parser :: O.Parser CmdOpts
 parser =
   CmdOpts
     <$> O.argument O.str (O.metavar "QUERY")
+    <*> O.switch
+          (O.short 'e' <> O.long "regex" <> O.help "Match a regular expression")
     <*> many (O.argument O.str (O.metavar "FILE"))

@@ -36,6 +36,7 @@ newtype ParseError = ParseError {
 data Query =
     MatchSimple [Char]
   | MatchRegex Regex
+  deriving (Eq, Ord, Show)
 
 data SearchResult =
   forall ast. EA.Annotate ast =>
