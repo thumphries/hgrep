@@ -1,0 +1,38 @@
+language: c
+sudo: false
+
+git:
+  submodules: false  # whether to recursively clone submodules
+
+cache:
+  directories:
+    - $HOME/.cabal/packages
+    - $HOME/.mafia
+
+before_cache:
+  - rm -fv $HOME/.cabal/packages/hackage.haskell.org/build-reports.log
+  - rm -fv $HOME/.cabal/packages/hackage.haskell.org/00-index.*
+  - rm -fv $HOME/.cabal/packages/hackage.haskell.org/*.json
+  - rm -fv $HOME/.cabal/packages/hackage.haskell.org/01-index.cache
+  - rm -fv $HOME/.cabal/packages/hackage.haskell.org/01-index.tar
+  - rm -fv $HOME/.cabal/packages/hackage.haskell.org/01-index.tar.idx
+
+matrix:
+  include:
+    - compiler: "ghc-8.0.1"
+      addons: {apt: {packages: [ghc-ppa-tools,cabal-install-1.24,ghc-8.0.1], sources: [hvr-ghc]}}
+    - compiler: "ghc-8.0.2"
+      addons: {apt: {packages: [ghc-ppa-tools,cabal-install-1.24,ghc-8.0.2], sources: [hvr-ghc]}}
+    - compiler: "ghc-8.2.1"
+      addons: {apt: {packages: [ghc-ppa-tools,cabal-install-1.24,ghc-8.0.2], sources: [hvr-ghc]}}
+
+before_install:
+ - unset CC
+ - PATH=/opt/ghc/bin:/opt/ghc-ppa-tools/bin:$PATH
+
+install:
+ - travis_retry cabal update -v
+ - bin/travis_install
+
+script:
+ - bin/travis_script
