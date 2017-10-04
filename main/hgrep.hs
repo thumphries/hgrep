@@ -53,8 +53,8 @@ hgrep :: HGrep.PrintOpts -> HGrep.Query -> FilePath -> IO Integer
 hgrep popts q fp = do
   esrc <- HGrep.parseModule fp
   case esrc of
-    Left _err ->
-      -- FIXME report or count errors
+    Left err -> do
+      IO.hPutStrLn IO.stderr (HGrep.printParseError err)
       pure 0
 
     Right src -> do

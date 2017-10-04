@@ -4,6 +4,8 @@ module Language.Haskell.HGrep (
   -- * Parsing
     ParsedSource
   , parseModule
+  , ParseError
+  , HP.printParseError
   -- * Searching
   , Query (..)
   , SearchResult
