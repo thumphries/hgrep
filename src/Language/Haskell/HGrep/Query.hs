@@ -52,7 +52,7 @@ nameQuery q n =
   case q of
     MatchSimple name ->
       compareName name n
-    MatchRegex rex ->
+    MatchRegex (Regex rex) ->
       nameToString n =~ rex
 
 compareName :: [Char] -> RdrName.RdrName -> Bool

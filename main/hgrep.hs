@@ -3,8 +3,6 @@
 module Main where
 
 
-import qualified Data.ByteString.Char8 as B8
-
 import qualified Language.Haskell.HGrep as HGrep
 import           Language.Haskell.HGrep.Prelude
 
@@ -13,8 +11,6 @@ import qualified Options.Applicative as O
 import qualified System.Console.ANSI as ANSI
 import           System.Exit (ExitCode (..), exitWith)
 import qualified System.IO as IO
-
-import qualified Text.Regex.PCRE.Heavy as PCRE
 
 
 main :: IO ()
@@ -67,7 +63,7 @@ parseQuery :: [Char] -> Bool -> Either [Char] HGrep.Query
 parseQuery str regex =
   case regex of
     True ->
-      HGrep.MatchRegex <$> PCRE.compileM (B8.pack str) []
+      HGrep.MatchRegex <$> HGrep.compileRegex str
     False ->
       pure $ HGrep.MatchSimple str
 

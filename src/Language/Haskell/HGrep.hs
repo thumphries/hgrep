@@ -7,10 +7,14 @@ module Language.Haskell.HGrep (
   , ParseError
   , HP.printParseError
   -- * Searching
+  -- ** Queries
   , Query (..)
+  , Regex
+  , compileRegex
+  -- ** Running queries
   , SearchResult
   , queryModule
-  -- * Printing
+  -- * Printing results
   , PrintOpts (..)
   , defaultPrintOpts
   , ColourOpts (..)
