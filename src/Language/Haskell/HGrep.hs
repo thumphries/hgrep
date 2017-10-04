@@ -5,7 +5,7 @@ module Language.Haskell.HGrep (
     ParsedSource
   , parseModule
   -- * Searching
-  , Query
+  , Query (..)
   , SearchResult
   , queryModule
   -- * Printing

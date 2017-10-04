@@ -44,12 +44,12 @@ hgrep :: HGrep.PrintOpts -> HGrep.Query -> FilePath -> IO Integer
 hgrep popts q fp = do
   esrc <- HGrep.parseModule fp
   case esrc of
-    Left err ->
+    Left _err ->
       -- FIXME report or count errors
       pure 0
 
     Right src -> do
-      let results = HGrep.queryModule q src
+      let results = HGrep.queryModule (HGrep.MatchSimple q) src
       HGrep.printResults popts results
       pure $ fromIntegral (length results)
 

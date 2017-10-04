@@ -6,7 +6,7 @@
 module Language.Haskell.HGrep.Internal.Data (
     ParsedSource (..)
   , ParseError (..)
-  , Query
+  , Query (..)
   , SearchResult (..)
   , PrintOpts (..)
   , defaultPrintOpts
@@ -18,6 +18,8 @@ import           Language.Haskell.HGrep.Prelude
 
 import qualified Language.Haskell.GHC.ExactPrint.Annotater as EA
 import qualified Language.Haskell.GHC.ExactPrint.Types as ET
+
+import           Text.Regex.PCRE.Heavy (Regex)
 
 import qualified GHC
 import qualified SrcLoc
@@ -31,7 +33,9 @@ newtype ParseError = ParseError {
     unParseError :: (SrcLoc.SrcSpan, [Char])
   }
 
-type Query = [Char]
+data Query =
+    MatchSimple [Char]
+  | MatchRegex Regex
 
 data SearchResult =
   forall ast. EA.Annotate ast =>

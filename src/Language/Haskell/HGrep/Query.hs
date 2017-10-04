@@ -18,6 +18,8 @@ import           Language.Haskell.HGrep.Internal.Data
 import           Language.Haskell.HGrep.Internal.Lens
 import           Language.Haskell.HGrep.Prelude
 
+import           Text.Regex.PCRE.Heavy ((=~))
+
 import qualified FastString
 import qualified HsDecls
 import qualified OccName
@@ -25,25 +27,33 @@ import qualified RdrName
 import           SrcLoc (unLoc)
 
 
-findTypeDecl :: [Char] -> ParsedSource -> [SearchResult]
-findTypeDecl name src =
+findTypeDecl :: Query -> ParsedSource -> [SearchResult]
+findTypeDecl q src =
   matchDecls src $ \decl ->
     fromMaybe False . match decl $
-         _TyClD . _DataDecl . _1 . _unloc . to (compareName name)
-      <> _TyClD . _SynDecl . _1 . _unloc . to (compareName name)
+         _TyClD . _DataDecl . _1 . _unloc . to (nameQuery q)
+      <> _TyClD . _SynDecl . _1 . _unloc . to (nameQuery q)
 
-findValueDecl :: [Char] -> ParsedSource -> [SearchResult]
-findValueDecl name src =
+findValueDecl :: Query -> ParsedSource -> [SearchResult]
+findValueDecl q src =
   matchDecls src $ \decl ->
     fromMaybe False . match decl $
-         _ValD . _FunBind . _1 . _unloc . to (compareName name)
-      <> _ValD . _VarBind . _1 . to (compareName name)
-      <> _SigD . _TypeSig . _1 . to (any (compareName name . unLoc))
+         _ValD . _FunBind . _1 . _unloc . to (nameQuery q)
+      <> _ValD . _VarBind . _1 . to (nameQuery q)
+      <> _SigD . _TypeSig . _1 . to (any (nameQuery q . unLoc))
 
 matchDecls :: ParsedSource -> (HsDecls.HsDecl RdrName.RdrName -> Bool) -> [SearchResult]
 matchDecls (ParsedSource (anns, locMod)) p =
   fmap (SearchResult anns) $
     L.filter (p . unLoc) (locMod ^. _unloc . _hsmodDecls)
+
+nameQuery :: Query -> RdrName.RdrName -> Bool
+nameQuery q n =
+  case q of
+    MatchSimple name ->
+      compareName name n
+    MatchRegex rex ->
+      nameToString n =~ rex
 
 compareName :: [Char] -> RdrName.RdrName -> Bool
 compareName name n =
@@ -54,6 +64,23 @@ compareName name n =
       fastEq name (OccName.occNameFS ocn)
     _ ->
       False
+
+nameToFS :: RdrName.RdrName -> FastString.FastString
+nameToFS n =
+  OccName.occNameFS $
+    case n of
+      RdrName.Unqual ocn ->
+        ocn
+      RdrName.Qual _mod ocn ->
+        ocn
+      RdrName.Orig _mod ocn ->
+        ocn
+      RdrName.Exact name ->
+        name ^. _n_occ
+
+nameToString :: RdrName.RdrName -> [Char]
+nameToString =
+  FastString.unpackFS . nameToFS
 
 fastEq :: [Char] -> FastString.FastString -> Bool
 fastEq s fs =
