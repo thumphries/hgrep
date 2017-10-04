@@ -1,10 +1,7 @@
-resolver: lts-8.24
+resolver: lts-9.6
 
 packages:
 - .
-
-extra-deps:
-  - ghc-exactprint-0.5.5.0
 
 flags: {}
 
