@@ -4,6 +4,7 @@ module Main where
 
 
 import qualified Language.Haskell.HGrep as HGrep
+import qualified Language.Haskell.HGrep.Internal.Data as HGrep
 import           Language.Haskell.HGrep.Prelude
 
 import qualified Options.Applicative as O
@@ -27,7 +28,7 @@ main = do
       found <-
         fmap sum $
           for (cmdFiles opts) $ \fp ->
-            hgrep (HGrep.PrintOpts colour) q fp
+            hgrep (HGrep.PrintOpts colour (cmdLineNums opts)) q fp
       exitWith (exitCode found)
 
 exitCode :: Integer -> ExitCode
@@ -70,9 +71,10 @@ parseQuery str regex =
 -- -----------------------------------------------------------------------------
 
 data CmdOpts = CmdOpts {
-    cmdQuery :: [Char]
-  , cmdRegex :: Bool
-  , cmdFiles :: [FilePath]
+    cmdQuery    :: [Char]
+  , cmdRegex    :: Bool
+  , cmdFiles    :: [FilePath]
+  , cmdLineNums :: HGrep.LineNumOpts
   } deriving (Eq, Ord, Show)
 
 parseOpts :: IO CmdOpts
@@ -89,3 +91,5 @@ parser =
     <*> O.switch
           (O.short 'e' <> O.long "regex" <> O.help "Match a regular expression")
     <*> many (O.argument O.str (O.metavar "FILE"))
+    <*> O.flag HGrep.PrintLineNums HGrep.NoLineNums
+          (O.short 'n' <> O.long "no-numbers" <> O.help "Turn line numbering off")

@@ -32,7 +32,7 @@ printParseError (ParseError (loc, msg)) =
     ]
 
 printSearchResult :: PrintOpts -> SearchResult -> [Char]
-printSearchResult (PrintOpts co) (SearchResult anns ast) =
+printSearchResult (PrintOpts co lno) (SearchResult anns ast) =
   -- Get the start position of the comment before search result
   let annsPairs      = Map.toList anns
       targetAnnPairs = L.filter (isSameLoc .fst) annsPairs
@@ -45,12 +45,18 @@ printSearchResult (PrintOpts co) (SearchResult anns ast) =
               []                 -> resLoc
               ((comment, _) : _) -> getSpanStartLine $ EP.commentIdentifier comment
       numberedSrc = printWithLineNums startLineNum in
-    case co of
-      DefaultColours ->
-        hscolour numberedSrc
-      NoColours ->
-        numberedSrc
+    colorize $ case lno of
+      PrintLineNums -> numberedSrc
+      NoLineNums    -> wholeSrc
   where
+    colorize :: [Char] -> [Char]
+    colorize anySrc =
+      case co of
+        DefaultColours ->
+          hscolour anySrc
+        NoColours ->
+          anySrc
+
     resSpan :: SrcLoc.SrcSpan
     resSpan = SrcLoc.getLoc ast
 
@@ -82,7 +88,7 @@ printSearchResult (PrintOpts co) (SearchResult anns ast) =
     prependLineNum i l = show i <> "  " <> l
 
 printSearchResultLocation :: PrintOpts -> SearchResult -> [Char]
-printSearchResultLocation (PrintOpts co) (SearchResult _anns ast) =
+printSearchResultLocation (PrintOpts co _) (SearchResult _anns ast) =
   let loc = chomp (unsafePpr (SrcLoc.getLoc ast)) in
     case co of
       DefaultColours ->

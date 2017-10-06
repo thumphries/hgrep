@@ -13,6 +13,7 @@ module Language.Haskell.HGrep.Internal.Data (
   , PrintOpts (..)
   , defaultPrintOpts
   , ColourOpts (..)
+  , LineNumOpts (..)
   ) where
 
 
@@ -55,7 +56,8 @@ data SearchResult =
     SearchResult ET.Anns (SrcLoc.Located ast)
 
 data PrintOpts = PrintOpts {
-    poColourOpts :: ColourOpts
+    poColourOpts  :: ColourOpts
+  , poLineNumOpts :: LineNumOpts
   } deriving (Eq, Ord, Show)
 
 data ColourOpts =
@@ -63,8 +65,14 @@ data ColourOpts =
   | NoColours
   deriving (Eq, Ord, Show)
 
+data LineNumOpts =
+    PrintLineNums
+  | NoLineNums
+  deriving (Eq, Ord, Show)
+
 defaultPrintOpts :: PrintOpts
 defaultPrintOpts =
   PrintOpts {
-      poColourOpts = DefaultColours
+      poColourOpts  = DefaultColours
+    , poLineNumOpts = PrintLineNums
     }
