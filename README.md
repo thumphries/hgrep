@@ -21,6 +21,58 @@ An expression can be one of
 Each file will be parsed and searched. Results will be printed to the
 console, with syntax highlighting where possible.
 
+### Requirements
+
+You can use `cabal` or `stack` to install, but you may need `libpcre`. In case you don't have it:
+
+#### Ubuntu
+
+```bash
+sudo apt update
+sudo apt install libpcre3-dev
+```
+
+#### Fedora
+
+```
+sudo dnf update
+sudo dnf install pcre-devel
+```
+
+#### NixOS / Nix Package Manager
+
+```
+nix-env -i pcre
+```
+
+### Install
+
+#### Stack
+
+```
+git clone https://github.com/thumphries/hgrep.git
+cd !$
+stack install
+```
+
+
+#### Cabal
+
+```
+git clone https://github.com/thumphries/hgrep.git
+cd !$
+cabal new-build
+```
+
+#### Mafia
+
+```
+git clone https://github.com/thumphries/hgrep.git
+cd !$
+mafia build
+```
+
+
 ### Searching for top-level expressions
 
 ```haskell
