@@ -70,6 +70,7 @@ module Language.Haskell.HGrep.Prelude (
   , curry
   , uncurry
 
+
   -- * Typeclasses
   -- ** Enum
   , Enum (..)
@@ -87,6 +88,7 @@ module Language.Haskell.HGrep.Prelude (
   -- ** Foldable
   , Foldable (..)
   , for_
+  , all
   -- ** Ord
   , Ord (..)
   , Ordering (..)
@@ -108,6 +110,10 @@ module Language.Haskell.HGrep.Prelude (
   , fix
   , on
   , seq
+
+  -- * Predicates
+  -- ** Char
+  , isSpace
 
   -- * System
   -- ** IO
@@ -155,6 +161,7 @@ import           Data.Bool as Bool (
          )
 import           Data.Char as Char (
            Char
+         , isSpace
          )
 import           Data.Either as Either (
            Either (..)
@@ -165,6 +172,7 @@ import           Data.Foldable as Foldable (
          , asum
          , traverse_
          , for_
+         , all
          )
 import           Data.Function as Function (
            id

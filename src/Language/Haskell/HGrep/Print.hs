@@ -9,8 +9,6 @@ module Language.Haskell.HGrep.Print (
 
 import qualified Data.List as L
 import qualified Data.Map  as Map
-import Data.Char (isSpace)
-import Data.Foldable (all)
 
 import qualified Language.Haskell.GHC.ExactPrint as EP
 import qualified Language.Haskell.GHC.ExactPrint.Types as EP
