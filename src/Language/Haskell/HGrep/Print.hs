@@ -9,6 +9,8 @@ module Language.Haskell.HGrep.Print (
 
 import qualified Data.List as L
 import qualified Data.Map  as Map
+import Data.Char (isSpace)
+import Data.Foldable (all)
 
 import qualified Language.Haskell.GHC.ExactPrint as EP
 import qualified Language.Haskell.GHC.ExactPrint.Types as EP
@@ -44,10 +46,11 @@ printSearchResult (PrintOpts co lno) (SearchResult anns ast) =
             case EP.annPriorComments ann of
               []                 -> resLoc
               ((comment, _) : _) -> getSpanStartLine $ EP.commentIdentifier comment
+      nonNumberedSrc = L.unlines src
       numberedSrc = printWithLineNums startLineNum in
     colorize $ case lno of
       PrintLineNums -> numberedSrc
-      NoLineNums    -> wholeSrc
+      NoLineNums    -> nonNumberedSrc
   where
     colorize :: [Char] -> [Char]
     colorize anySrc =
@@ -74,14 +77,14 @@ printSearchResult (PrintOpts co lno) (SearchResult anns ast) =
     wholeSrc :: [Char]
     wholeSrc = EP.exactPrint ast anns
 
-    nill, src :: [[Char]]
-    (nill, src) = L.span null $ L.lines wholeSrc
+    src :: [[Char]]
+    (_, src) = L.span (\s -> null s || all isSpace s) $ L.lines wholeSrc
 
     -- Doesn't prepent locations when there is no start line number
     printWithLineNums :: Maybe Int -> [Char]
-    printWithLineNums Nothing      = wholeSrc
+    printWithLineNums Nothing      = L.unlines src
     printWithLineNums (Just start) =
-      L.unlines $ nill <> L.zipWith prependLineNum [start..] src
+      L.unlines $ L.zipWith prependLineNum [start..] src
 
     -- Adds line numbers at the start of each line
     prependLineNum :: Int -> [Char] -> [Char]
