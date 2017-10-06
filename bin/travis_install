@@ -1,6 +1,0 @@
-#!/bin/sh -eu
-
-cabal --version
-echo "$(ghc --version) [$(ghc --print-project-git-commit-id 2> /dev/null || echo '?')]"
-ROOT=$PWD
-$ROOT/bin/mafia lock
