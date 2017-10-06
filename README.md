@@ -50,9 +50,26 @@ nix-env -i pcre
 #### Stack
 
 ```
-git clone https://github.com/timhumphries/hgrep.git
+git clone https://github.com/thumphries/hgrep.git
 cd !$
 stack install
+```
+
+
+#### Cabal
+
+```
+git clone https://github.com/thumphries/hgrep.git
+cd !$
+cabal new-build
+```
+
+#### Mafia
+
+```
+git clone https://github.com/thumphries/hgrep.git
+cd !$
+mafia build
 ```
 
 
