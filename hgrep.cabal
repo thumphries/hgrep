@@ -1,5 +1,5 @@
 name:                hgrep
-version:             0.1
+version:             0.2
 homepage:            https://github.com/thumphries/hgrep
 author:              Tim Humphries
 maintainer:          tim@utf8.me
@@ -45,7 +45,7 @@ library
                      base                           >= 4.9           && < 4.11
                    , ansi-terminal                  >= 0.6.3         && < 0.8
                    , bytestring                     >= 0.10.4        && < 0.12
-                   , containers                     >= 0.5.7         && < 0.5.10
+                   , containers                     >= 0.5.7         && < 0.5.13
                    , ghc                            >= 7.10.2        && < 8.3
                    , ghc-exactprint                 >= 0.5.4.0       && < 0.6
                    , hscolour                       >= 1.24          && < 1.25

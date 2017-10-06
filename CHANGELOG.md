@@ -1,3 +1,7 @@
+## Version 0.2 (unreleased)
+
+- Print line numbers (optionally disabled with `--no-numbers`)
+
 ## Version 0.1 (2017-10-04)
 
 - Support Perl-compatible regular expressions (`[-e|--regex]`)
