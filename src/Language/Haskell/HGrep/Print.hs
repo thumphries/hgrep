@@ -43,15 +43,13 @@ printSearchResult (PrintOpts co) (SearchResult anns ast) =
           ((_, ann) : _) ->
             case EP.annPriorComments ann of
               []                 -> resLoc
-              ((comment, _) : _) -> getSpanStartLine $ EP.commentIdentifier comment in
-  -- ignore empty lines before the actual result
-  let wholeSrc    = EP.exactPrint ast anns
-      (nill, src) = L.span null $ L.lines wholeSrc in
+              ((comment, _) : _) -> getSpanStartLine $ EP.commentIdentifier comment
+      numberedSrc = printWithLineNums startLineNum in
     case co of
       DefaultColours ->
-        L.unlines $ nill <> L.zipWith printLine [startLineNum..] src
+        hscolour numberedSrc
       NoColours ->
-        wholeSrc
+        numberedSrc
   where
     resSpan :: SrcLoc.SrcSpan
     resSpan = SrcLoc.getLoc ast
@@ -59,15 +57,29 @@ printSearchResult (PrintOpts co) (SearchResult anns ast) =
     isSameLoc :: EP.AnnKey -> Bool
     isSameLoc (EP.AnnKey loc _) = loc == resSpan
 
-    printLine :: Int -> [Char] -> [Char]
-    printLine i l = show i <> "  " <> hscolour l
-
-    getSpanStartLine :: SrcLoc.SrcSpan -> Int
+    -- Returns the line number if possible to find
+    getSpanStartLine :: SrcLoc.SrcSpan -> Maybe Int
     getSpanStartLine someSpan =
       case SrcLoc.srcSpanStart someSpan of
-        SrcLoc.RealSrcLoc x -> SrcLoc.srcLocLine x
-        -- TODO: Don't know how to get rid of error
-        _                   -> error "SrcLoc is FastString"
+        SrcLoc.RealSrcLoc x -> Just $ SrcLoc.srcLocLine x
+        _                   -> Nothing
+
+    -- ignore empty lines before the actual result
+    wholeSrc :: [Char]
+    wholeSrc = EP.exactPrint ast anns
+
+    nill, src :: [[Char]]
+    (nill, src) = L.span null $ L.lines wholeSrc
+
+    -- Doesn't prepent locations when there is no start line number
+    printWithLineNums :: Maybe Int -> [Char]
+    printWithLineNums Nothing      = wholeSrc
+    printWithLineNums (Just start) =
+      L.unlines $ nill <> L.zipWith prependLineNum [start..] src
+
+    -- Adds line numbers at the start of each line
+    prependLineNum :: Int -> [Char] -> [Char]
+    prependLineNum i l = show i <> "  " <> l
 
 printSearchResultLocation :: PrintOpts -> SearchResult -> [Char]
 printSearchResultLocation (PrintOpts co) (SearchResult _anns ast) =
