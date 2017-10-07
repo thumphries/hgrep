@@ -34,28 +34,15 @@ printParseError (ParseError (loc, msg)) =
 printSearchResult :: PrintOpts -> SearchResult -> [Char]
 printSearchResult (PrintOpts co lno) (SearchResult anns ast) =
   -- Get the start position of the comment before search result
-  let annsPairs      = Map.toList anns
-      targetAnnPairs = L.filter (isSameLoc .fst) annsPairs
-      resLoc         = getSpanStartLine resSpan
-      startLineNum   =
-        case targetAnnPairs of
-          []             -> resLoc
-          ((_, ann) : _) ->
-            case EP.annPriorComments ann of
-              []                 -> resLoc
-              ((comment, _) : _) -> getSpanStartLine $ EP.commentIdentifier comment
-      numberedSrc = printWithLineNums startLineNum in
-    colorize $ case lno of
+  colorize $ case lno of
       PrintLineNums -> numberedSrc
-      NoLineNums    -> wholeSrc
+      NoLineNums    -> nonNumberedSrc
   where
     colorize :: [Char] -> [Char]
     colorize anySrc =
       case co of
-        DefaultColours ->
-          hscolour anySrc
-        NoColours ->
-          anySrc
+        DefaultColours -> hscolour anySrc
+        NoColours      -> anySrc
 
     resSpan :: SrcLoc.SrcSpan
     resSpan = SrcLoc.getLoc ast
@@ -74,14 +61,29 @@ printSearchResult (PrintOpts co lno) (SearchResult anns ast) =
     wholeSrc :: [Char]
     wholeSrc = EP.exactPrint ast anns
 
-    nill, src :: [[Char]]
-    (nill, src) = L.span null $ L.lines wholeSrc
+    nonEmptySrc :: [[Char]]
+    (_, nonEmptySrc) = L.span null $ L.lines wholeSrc
+
+    nonNumberedSrc = L.unlines nonEmptySrc
 
     -- Doesn't prepent locations when there is no start line number
     printWithLineNums :: Maybe Int -> [Char]
-    printWithLineNums Nothing      = wholeSrc
+    printWithLineNums Nothing      = nonNumberedSrc
     printWithLineNums (Just start) =
-      L.unlines $ nill <> L.zipWith prependLineNum [start..] src
+      L.unlines $ L.zipWith prependLineNum [start..] nonEmptySrc
+
+    annsPairs      = Map.toList anns
+    targetAnnPairs = L.filter (isSameLoc .fst) annsPairs
+    resLoc         = getSpanStartLine resSpan
+    startLineNum   =
+        case targetAnnPairs of
+          []             -> resLoc
+          ((_, ann) : _) ->
+            case EP.annPriorComments ann of
+              []                 -> resLoc
+              ((comment, _) : _) -> getSpanStartLine $ EP.commentIdentifier comment
+
+    numberedSrc = printWithLineNums startLineNum
 
     -- Adds line numbers at the start of each line
     prependLineNum :: Int -> [Char] -> [Char]

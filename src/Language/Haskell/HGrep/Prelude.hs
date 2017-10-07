@@ -87,6 +87,7 @@ module Language.Haskell.HGrep.Prelude (
   -- ** Foldable
   , Foldable (..)
   , for_
+  , all
   -- ** Ord
   , Ord (..)
   , Ordering (..)
@@ -95,7 +96,6 @@ module Language.Haskell.HGrep.Prelude (
   , Traversable (..)
   , for
   , traverse_
-
 
   -- * Combinators
   , id
@@ -165,6 +165,7 @@ import           Data.Foldable as Foldable (
          , asum
          , traverse_
          , for_
+         , all
          )
 import           Data.Function as Function (
            id
