@@ -73,6 +73,8 @@ module Language.Haskell.HGrep.Prelude (
   -- * Typeclasses
   -- ** Enum
   , Enum (..)
+  -- ** Num
+  , Num (..)
   -- ** Eq
   , Eq (..)
   -- ** Read
@@ -233,6 +235,7 @@ import           GHC.Stack (HasCallStack)
 
 import           Prelude as Prelude (
            Enum (..)
+         , Num (..)
          , Integer
          , seq
          , ($!)
