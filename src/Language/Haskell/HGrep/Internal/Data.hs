@@ -34,9 +34,9 @@ newtype ParsedSource = ParsedSource {
     unParsedSource :: (ET.Anns, GHC.Located (GHC.HsModule GHC.RdrName))
   }
 
-newtype ParseError = ParseError {
-    unParseError :: (SrcLoc.SrcSpan, [Char])
-  }
+data ParseError =
+    ExactPrintParseError (SrcLoc.SrcSpan, [Char])
+  | ExactPrintException
 
 data Query =
     MatchSimple [Char]

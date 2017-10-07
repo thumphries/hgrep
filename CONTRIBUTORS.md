@@ -8,3 +8,4 @@ order:
 - Veronika Romashkina ([@vrom911](https://github.com/vrom911))
 - Ryan James Spencer ([@justanotherdot](https://github.com/justanotherdot))
 - Eoin Houlihan ([@houli](https://github.com/houli))
+- Bobby Rauchenberg ([@bobbyrauchenberg](https://github.com/bobbyrauchenberg))

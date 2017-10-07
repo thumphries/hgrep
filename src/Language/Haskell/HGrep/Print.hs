@@ -23,7 +23,8 @@ import qualified SrcLoc
 
 
 printParseError :: ParseError -> [Char]
-printParseError (ParseError (loc, msg)) =
+printParseError ExactPrintException = "Parsing failed unexpectedly with an exception"
+printParseError (ExactPrintParseError (loc, msg)) =
   L.intercalate ": " [
       unsafePpr loc
     , msg

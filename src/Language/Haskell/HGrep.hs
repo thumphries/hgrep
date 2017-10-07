@@ -24,6 +24,8 @@ module Language.Haskell.HGrep (
   ) where
 
 
+import qualified Control.Exception as E
+
 import           Language.Haskell.HGrep.Internal.Data
 import           Language.Haskell.HGrep.Internal.Print
 import           Language.Haskell.HGrep.Prelude
@@ -32,14 +34,21 @@ import qualified Language.Haskell.HGrep.Query as HQ
 
 import qualified Language.Haskell.GHC.ExactPrint as EP
 
+import           System.Exit (ExitCode (..))
 import qualified System.IO as IO
 
 import qualified SrcLoc
 
 
 parseModule :: FilePath -> IO (Either ParseError ParsedSource)
-parseModule hs =
-  bimap ParseError ParsedSource <$> EP.parseModule hs
+parseModule hs = do
+  res <- E.tryJust handler (bimap ExactPrintParseError ParsedSource <$> EP.parseModule hs)
+  return $ case res of
+    Left e -> Left e
+    Right v -> v
+    where handler :: ExitCode -> Maybe ParseError
+          handler (ExitFailure _) = Just ExactPrintException
+          handler _ = Nothing
 
 queryModule :: Query -> ParsedSource -> [SearchResult]
 queryModule q src =
