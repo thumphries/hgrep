@@ -1,0 +1,54 @@
+---
+branches:
+  except:
+    - gh-pages
+build: false
+cache:
+  - "c:\\hgrep\\dist"
+clone_folder: "c:\\hgrep"
+environment:
+  global:
+    STACK_ROOT: "c:\\sr"
+  matrix:
+    -
+      GHC: ghc-8.0.1
+      GHC_URL: "https://downloads.haskell.org/~ghc/8.0.1/ghc-8.0.1-x86_64-unknown-mingw32.tar.xz"
+      STACK_YAML: stack-8.0.1.yaml
+    -
+      GHC: ghc-8.0.2
+      GHC_URL: "https://downloads.haskell.org/~ghc/8.0.2/ghc-8.0.2-x86_64-unknown-mingw32.tar.xz"
+      STACK_YAML: stack.yaml
+    -
+      GHC: ghc-8.2.1
+      GHC_URL: "https://downloads.haskell.org/~ghc/8.2.1/ghc-8.2.1-x86_64-unknown-mingw32.tar.xz"
+      STACK_YAML: stack-8.2.1.yaml
+image: "Visual Studio 2015"
+install:
+  - "mkdir c:\\ghc"
+  - "curl -sS -oghc.tar.xz -L --insecure %GHC_URL%"
+  - "7z x ghc.tar.xz -oc:\\ghc -r"
+  - "7z x c:\\ghc\\ghc.tar -oc:\\ghc -r"
+  - "set PATH=C:\\ghc\\%GHC%\\bin;%PATH%;C:\\ghc\\%GHC%\\mingw\\bin;C:\\ghc\\%GHC%\\mingw\\x86_64-w64-mingw32\\bin"
+  - "set PATH=C:\\msys64\\mingw64\\bin;C:\\Program Files\\Git\\mingw64\\bin;C:\\msys64\\usr\\bin;%PATH%"
+  - "curl -sS -ostack.zip -L --insecure http://www.stackage.org/stack/windows-x86_64"
+  - "7z x stack.zip stack.exe"
+  - "curl -sS -ocabal.zip -L --insecure https://www.haskell.org/cabal/release/cabal-install-1.24.0.2/cabal-install-1.24.0.2-x86_64-unknown-mingw32.zip"
+  - "7z x cabal.zip cabal.exe"
+  - "pacman -Syu --noconfirm"
+  - "pacman -S mingw-w64-x86_64-pcre --noconfirm"
+  - "pacman -S mingw-w64-x86_64-pkg-config --noconfirm"
+  - "stack config set system-ghc --global true"
+  - "pip install awscli"
+matrix:
+  fast_finish: true
+test_script:
+  - "cabal update"
+  - "cabal install --only-dependencies"
+  - "cabal configure"
+  - "cabal build"
+  - "cabal test"
+  - "dist\\build\\hgrep\\hgrep.exe hgrep main\\hgrep.hs"
+  - "echo \"\" | stack --stack-yaml %STACK_YAML% test"
+  - "stack exec -- hgrep hgrep main\\hgrep.hs"
+deploy_script:
+  - "bash bin/travis_publish"
