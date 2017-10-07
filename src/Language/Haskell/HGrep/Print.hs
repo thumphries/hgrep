@@ -9,7 +9,6 @@ module Language.Haskell.HGrep.Print (
 
 import qualified Data.List as L
 import qualified Data.Map  as Map
-import Data.Char (isSpace)
 
 import qualified Language.Haskell.GHC.ExactPrint as EP
 import qualified Language.Haskell.GHC.ExactPrint.Types as EP
@@ -63,7 +62,7 @@ printSearchResult (PrintOpts co lno) (SearchResult anns ast) =
     wholeSrc = EP.exactPrint ast anns
 
     nonEmptySrc :: [[Char]]
-    nonEmptySrc = L.filter (not . all isSpace) $ L.lines wholeSrc
+    (_, nonEmptySrc) = L.span null $ L.lines wholeSrc
 
     nonNumberedSrc = L.unlines nonEmptySrc
 
