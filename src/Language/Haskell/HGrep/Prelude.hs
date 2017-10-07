@@ -70,7 +70,6 @@ module Language.Haskell.HGrep.Prelude (
   , curry
   , uncurry
 
-
   -- * Typeclasses
   -- ** Enum
   , Enum (..)
@@ -97,7 +96,6 @@ module Language.Haskell.HGrep.Prelude (
   , Traversable (..)
   , for
   , traverse_
-
 
   -- * Combinators
   , id
