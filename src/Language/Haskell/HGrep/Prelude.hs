@@ -109,10 +109,6 @@ module Language.Haskell.HGrep.Prelude (
   , on
   , seq
 
-  -- * Predicates
-  -- ** Char
-  , isSpace
-
   -- * System
   -- ** IO
   , IO
@@ -159,7 +155,6 @@ import           Data.Bool as Bool (
          )
 import           Data.Char as Char (
            Char
-         , isSpace
          )
 import           Data.Either as Either (
            Either (..)
