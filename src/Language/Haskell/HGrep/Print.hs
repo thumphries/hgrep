@@ -8,7 +8,7 @@ module Language.Haskell.HGrep.Print (
 
 
 import qualified Data.List as L
-import qualified Data.Map  as Map
+import qualified Data.Map as Map
 
 import qualified Language.Haskell.GHC.ExactPrint as EP
 import qualified Language.Haskell.GHC.ExactPrint.Types as EP
@@ -87,9 +87,9 @@ printSearchResult (PrintOpts co lno) (SearchResult anns ast) =
     prependLineNum :: Int -> [Char] -> [Char]
     prependLineNum i l = show i <> "  " <> l
 
-printSearchResultLocation :: PrintOpts -> SearchResult -> [Char]
-printSearchResultLocation (PrintOpts co _) (SearchResult _anns ast) =
-  let loc = chomp (unsafePpr (SrcLoc.getLoc ast)) in
+printSearchResultLocation :: PrintOpts -> SrcLoc.SrcSpan -> [Char]
+printSearchResultLocation (PrintOpts co _) span =
+  let loc = chomp (unsafePpr span) in
     case co of
       DefaultColours ->
         ansiLocationFormat <> loc <> ansiReset
