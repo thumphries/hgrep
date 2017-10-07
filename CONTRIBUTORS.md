@@ -9,3 +9,4 @@ order:
 - Ryan James Spencer ([@justanotherdot](https://github.com/justanotherdot))
 - Eoin Houlihan ([@houli](https://github.com/houli))
 - Bobby Rauchenberg ([@bobbyrauchenberg](https://github.com/bobbyrauchenberg))
+- Dmitry Kovanikov ([@ChShersh](https://github.com/ChShersh))
