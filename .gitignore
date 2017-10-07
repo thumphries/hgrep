@@ -11,3 +11,5 @@ cabal.sandbox.config
 /tmp
 /gen
 .stack-work
+
+*~

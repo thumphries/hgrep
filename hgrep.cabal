@@ -62,3 +62,4 @@ library
                      Language.Haskell.HGrep.Internal.Data
                      Language.Haskell.HGrep.Internal.Lens
                      Language.Haskell.HGrep.Internal.Lens.Rules
+                     Language.Haskell.HGrep.Internal.Print

@@ -8,7 +8,7 @@ module Language.Haskell.HGrep.Print (
 
 
 import qualified Data.List as L
-import qualified Data.Map  as Map
+import qualified Data.Map as Map
 
 import qualified Language.Haskell.GHC.ExactPrint as EP
 import qualified Language.Haskell.GHC.ExactPrint.Types as EP
@@ -16,11 +16,9 @@ import qualified Language.Haskell.HsColour as HsColour
 import qualified Language.Haskell.HsColour.Colourise as HsColour
 
 import           Language.Haskell.HGrep.Internal.Data
+import           Language.Haskell.HGrep.Internal.Print
 import           Language.Haskell.HGrep.Prelude
 
-import qualified System.Console.ANSI as ANSI
-
-import qualified Outputable
 import qualified SrcLoc
 
 
@@ -90,33 +88,9 @@ printSearchResult (PrintOpts co lno) (SearchResult anns ast) =
     prependLineNum i l = show i <> "  " <> l
 
 printSearchResultLocation :: PrintOpts -> SearchResult -> [Char]
-printSearchResultLocation (PrintOpts co _) (SearchResult _anns ast) =
-  let loc = chomp (unsafePpr (SrcLoc.getLoc ast)) in
-    case co of
-      DefaultColours ->
-        ansiLocationFormat <> loc <> ansiReset
-      NoColours ->
-        loc
-
-ansiLocationFormat :: [Char]
-ansiLocationFormat =
-  ANSI.setSGRCode [
-      ANSI.SetColor ANSI.Foreground ANSI.Vivid ANSI.Green
-    , ANSI.SetUnderlining ANSI.SingleUnderline
-    ]
-
-ansiReset :: [Char]
-ansiReset =
-  ANSI.setSGRCode []
+printSearchResultLocation opts (SearchResult _anns ast) =
+  printSrcSpan opts (SrcLoc.getLoc ast)
 
 hscolour :: [Char] -> [Char]
 hscolour =
   HsColour.hscolour HsColour.TTY HsColour.defaultColourPrefs False False "" False
-
-unsafePpr :: Outputable.Outputable o => o -> [Char]
-unsafePpr =
-  Outputable.showSDocUnsafe . Outputable.ppr
-
-chomp :: [Char] -> [Char]
-chomp =
-  L.unlines . L.lines
