@@ -11,35 +11,42 @@ cache:
 jobs:
   include:
   # The Cabal builds.
-  - env: BUILD=cabal GHCVER=8.0.2 CABALVER=1.24 HAPPYVER=1.19.5 ALEXVER=3.1.7 PUBLISH=true
+  - stage: test
+    env: BUILD=cabal GHCVER=8.0.2 CABALVER=1.24 HAPPYVER=1.19.5 ALEXVER=3.1.7 PUBLISH=true
     compiler: ": #GHC 8.0.2"
     addons: {apt: {packages: [cabal-install-1.24,ghc-8.0.2,happy-1.19.5,alex-3.1.7], sources: [hvr-ghc]}}
   
-  - env: BUILD=cabal GHCVER=8.2.1 CABALVER=1.24 HAPPYVER=1.19.5 ALEXVER=3.1.7
+  - stage: test
+    env: BUILD=cabal GHCVER=8.2.1 CABALVER=1.24 HAPPYVER=1.19.5 ALEXVER=3.1.7
     compiler: ": #GHC 8.2.1"
     addons: {apt: {packages: [cabal-install-1.24,ghc-8.2.1,happy-1.19.5,alex-3.1.7], sources: [hvr-ghc]}}
   
   # Build with the newest GHC and cabal-install. This is an accepted failure,
-  - env: BUILD=cabal GHCVER=head  CABALVER=head HAPPYVER=1.19.5 ALEXVER=3.1.7
+  - stage: test
+    env: BUILD=cabal GHCVER=head  CABALVER=head HAPPYVER=1.19.5 ALEXVER=3.1.7
     compiler: ": #GHC HEAD"
     addons: {apt: {packages: [cabal-install-head,ghc-head,happy-1.19.5,alex-3.1.7], sources: [hvr-ghc]}}
   
   # The Stack builds.
-  - env: BUILD=stack ARGS=""
+  - stage: test
+    env: BUILD=stack ARGS=""
     compiler: ": #stack default"
     addons: {apt: {packages: [libgmp-dev]}}
   
   # Nightly builds are allowed to fail
-  - env: BUILD=stack ARGS="--resolver nightly"
+  - stage: test
+    env: BUILD=stack ARGS="--resolver nightly"
     compiler: ": #stack nightly"
     addons: {apt: {packages: [libgmp-dev]}}
   
   # Build on macOS in addition to Linux
-  - env: BUILD=stack ARGS="" PUBLISH=true
+  - stage: test
+    env: BUILD=stack ARGS="" PUBLISH=true
     compiler: ": #stack default osx"
     os: osx
   
-  - env: BUILD=stack ARGS="--resolver nightly"
+  - stage: test
+    env: BUILD=stack ARGS="--resolver nightly"
     compiler: ": #stack nightly osx"
     os: osx
   
