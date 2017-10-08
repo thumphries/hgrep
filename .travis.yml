@@ -48,10 +48,8 @@ matrix:
   - env: BUILD=stack ARGS="--resolver nightly"
 
 jobs:
-  include:
-  - stage: test
-   
-    before_install:
+  include: 
+  - before_install:
     # Using compiler above sets CC to an invalid value, so unset it
     - unset CC
     
@@ -80,7 +78,7 @@ jobs:
         echo 'jobs: $ncpus' >> $HOME/.cabal/config
       fi
      
-    install:
+  - install:
     - echo "$(ghc --version) [$(ghc --print-project-git-commit-id 2> /dev/null || echo '?')]"
     - if [ -f configure.ac ]; then autoreconf -i; fi
     - |
@@ -101,7 +99,7 @@ jobs:
       esac
       set +ex
    
-    script:
+  - script:
     - |
       set -ex
       case "$BUILD" in
@@ -131,12 +129,12 @@ jobs:
       esac
       set +ex
    
-    before_deploy:
+  - before_deploy:
     # Install awscli for deploy jobs
     - pip install --user awscli
     - PATH=$HOME/.local/bin:$HOME/Library/Python/2.7/bin:$PATH
    
-    deploy:
+  - deploy:
       provider: script
       script: bin/travis_publish
       skip_cleanup: true
