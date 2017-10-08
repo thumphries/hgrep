@@ -11,7 +11,7 @@ cache:
 matrix:
   include:
   # The Cabal builds.
-  - env: BUILD=cabal GHCVER=8.0.2 CABALVER=1.24 HAPPYVER=1.19.5 ALEXVER=3.1.7
+  - env: BUILD=cabal GHCVER=8.0.2 CABALVER=1.24 HAPPYVER=1.19.5 ALEXVER=3.1.7 PUBLISH=true
     compiler: ": #GHC 8.0.2"
     addons: {apt: {packages: [cabal-install-1.24,ghc-8.0.2,happy-1.19.5,alex-3.1.7], sources: [hvr-ghc]}}
 
@@ -35,7 +35,7 @@ matrix:
     addons: {apt: {packages: [libgmp-dev]}}
 
   # Build on macOS in addition to Linux
-  - env: BUILD=stack ARGS=""
+  - env: BUILD=stack ARGS="" PUBLISH=true
     compiler: ": #stack default osx"
     os: osx
 
@@ -126,3 +126,15 @@ script:
       ;;
   esac
   set +ex
+
+before_deploy:
+# Install awscli for deploy jobs
+- pip install --user awscli
+- PATH=$HOME/.local/bin:$HOME/Library/Python/2.7/bin:$PATH
+
+deploy:
+  provider: script
+  script: bin/travis_publish
+  skip_cleanup: true
+  on:
+    branch: master
