@@ -49,12 +49,8 @@ jobs:
     env: BUILD=stack ARGS="--resolver nightly"
     compiler: ": #stack nightly osx"
     os: osx
-  
-  allow_failures:
-  - env: BUILD=cabal GHCVER=head  CABALVER=head HAPPYVER=1.19.5 ALEXVER=3.1.7
-  - env: BUILD=stack ARGS="--resolver nightly"
 
-  - stage: GitHub Release
+  - stage: release
     before_deploy:
     # Install awscli for deploy jobs
     - pip install --user awscli
@@ -67,6 +63,10 @@ jobs:
       - ls -alr release
       on:
         branch: topic/releases
+  
+  allow_failures:
+  - env: BUILD=cabal GHCVER=head  CABALVER=head HAPPYVER=1.19.5 ALEXVER=3.1.7
+  - env: BUILD=stack ARGS="--resolver nightly"
    
 before_install:
 # Using compiler above sets CC to an invalid value, so unset it
