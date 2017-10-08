@@ -59,7 +59,7 @@ jobs:
       script:
       - ls -alr release
       on:
-        branch: master
+        branch: topic/releases
    
 before_install:
 # Using compiler above sets CC to an invalid value, so unset it
