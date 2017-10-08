@@ -1,0 +1,37 @@
+#!/bin/sh -exu
+
+PROJECT=hgrep
+BINARIES=hgrep
+
+if [ "${PUBLISH:-}" = "true" ]; then
+
+  export AWS_ACCESS_KEY_ID=${PUBLISH_KEY}
+  export AWS_SECRET_ACCESS_KEY=${PUBLISH_SECRET}
+  export AWS_DEFAULT_REGION=${PUBLISH_REGION}
+
+  BUCKET=${PUBLISH_BUCKET}
+  COMMIT=$(git rev-parse --verify HEAD)
+
+  GHC_VERSION=
+  GHC_PLATFORM=
+  DIST=
+  case "$BUILD" in
+    stack)
+        GHC_VERSION=$(stack ghc -- --numeric-version)
+        GHC_PLATFORM=$(stack ghc -- --print-target-platform)
+        DIST=$(stack path --dist-dir)
+      ;;
+    *)
+        GHC_VERSION=$(ghc --numeric-version)
+        GHC_PLATFORM=$(ghc --print-target-platform)
+        DIST=dist
+      ;;
+  esac
+
+  for B in $BINARIES; do
+    cp "${DIST}/build/${B}/${B}" "${B}"
+    tar cvzf "${B}.tar.gz" "${B}"
+    aws s3 cp "${B}.tar.gz" "${BUCKET}/${PROJECT}/${COMMIT}/${GHC_PLATFORM}/${GHC_VERSION}/${B}.tar.gz"
+  done
+
+fi
