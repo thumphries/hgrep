@@ -1,0 +1,22 @@
+#!/bin/sh -exu
+
+PROJECT=hgrep
+BINARIES=hgrep
+PLATFORMS=x86_64-unknown-linux x86_64-apple-darwin
+GHC_VERSION=8.0.2
+
+export AWS_ACCESS_KEY_ID=${PUBLISH_KEY}
+export AWS_SECRET_ACCESS_KEY=${PUBLISH_SECRET}
+export AWS_DEFAULT_REGION=${PUBLISH_REGION}
+
+BUCKET=${PUBLISH_BUCKET}
+COMMIT=$(git rev-parse --verify HEAD)
+
+mkdir release
+cd release
+for P in $PLATFORMS; do
+  for B in $BINARIES; do
+    aws s3 cp "${BUCKET}/${PROJECT}/${COMMIT}/${P}/${GHC_VERSION}/${B}.tar.gz" "release/${B}-${P}.tar.gz"
+  done
+done
+ls -alr release

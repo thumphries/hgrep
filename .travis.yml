@@ -138,3 +138,10 @@ deploy:
   skip_cleanup: true
   on:
     branch: master
+
+jobs:
+  include:
+  - stage: GitHub Release
+  - script: bin/travis_before_release
+  - if: branch = topic/releases
+  # - if: tag IS present
