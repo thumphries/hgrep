@@ -51,6 +51,7 @@ jobs:
     os: osx
 
   - stage: release
+    if: tag IS present
     before_deploy:
     # Install awscli for deploy jobs
     - pip install --user awscli
