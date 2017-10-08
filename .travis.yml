@@ -49,7 +49,7 @@ matrix:
 
 jobs:
   include:
-  - stage: Continuous integration
+  - stage: test
    
     before_install:
     # Using compiler above sets CC to an invalid value, so unset it
