@@ -12,10 +12,8 @@ export AWS_DEFAULT_REGION=${PUBLISH_REGION}
 BUCKET=${PUBLISH_BUCKET}
 COMMIT=$(git rev-parse --verify HEAD)
 
-mkdir release
 for P in $PLATFORMS; do
   for B in $BINARIES; do
-    aws s3 cp "${BUCKET}/${PROJECT}/${COMMIT}/${P}/${GHC_VERSION}/${B}.tar.gz" "release/${B}-${P}.tar.gz"
+    aws s3 cp "${BUCKET}/${PROJECT}/${COMMIT}/${P}/${GHC_VERSION}/${B}.tar.gz" "${B}-${P}.tar.gz"
   done
 done
-ls -alr release

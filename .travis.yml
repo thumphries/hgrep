@@ -164,7 +164,6 @@ jobs:
       provider: releases
       api-key: $GITHUB_OAUTH_TOKEN
       skip_cleanup: true
-      local_dir: release
       file:
       - "hgrep-x86_64-unknown-linux.tar.gz"
       - "hgrep-x86_64-apple-darwin.tar.gz"
