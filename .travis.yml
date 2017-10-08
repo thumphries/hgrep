@@ -144,6 +144,15 @@ jobs:
         branch: master
 
   - stage: GitHub Release
-    script: bin/travis_before_release
-    if: branch = topic/releases
-  # - if: tag IS present
+    before_deploy:
+    # Install awscli for deploy jobs
+    - pip install --user awscli
+    - PATH=$HOME/.local/bin:$HOME/Library/Python/2.7/bin:$PATH
+    - ./bin/travis_before_release
+
+    deploy:
+      provider: script
+      script:
+      - ls -alr release
+      on:
+        branch: master
