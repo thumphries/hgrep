@@ -2,7 +2,7 @@
 
 PROJECT=hgrep
 BINARIES=hgrep
-PLATFORMS=x86_64-unknown-linux x86_64-apple-darwin
+PLATFORMS="x86_64-unknown-linux x86_64-apple-darwin"
 GHC_VERSION=8.0.2
 
 export AWS_ACCESS_KEY_ID=${PUBLISH_KEY}
