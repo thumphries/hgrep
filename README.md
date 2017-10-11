@@ -1,4 +1,5 @@
 # hgrep
+[![Build Status](https://travis-ci.org/thumphries/hgrep.svg?branch=master)](https://travis-ci.org/thumphries/hgrep)
 
 Search Haskell source code from the command line.
 
