@@ -14,7 +14,6 @@ import           System.Exit (ExitCode (..), exitWith)
 import qualified System.IO as IO
 import qualified System.Directory as D
 import qualified System.FilePath as FP
-import qualified Data.List as L
 
 
 main :: IO ()
@@ -29,9 +28,10 @@ main = do
       exitWith (ExitFailure 2)
     Right q -> do
       -- if no directory provided -> search in current directory
-      files <- case cmdFiles opts of
-                 [] -> pure <$> D.getCurrentDirectory
-                 x  -> pure x
+      files <-
+        case cmdFiles opts of
+          [] -> pure <$> D.getCurrentDirectory
+          x  -> pure x
       allFiles <- foldMap getAllHsFiles files
       found <-
         fmap sum $
@@ -44,13 +44,13 @@ getAllHsFiles fp = do
   isDir <- D.doesDirectoryExist fp
   if isDir
   then do
-       fs <- L.map (fp FP.</>) <$> D.listDirectory fp
-       foldMap getAllHsFiles fs
+    fs <- fmap (fp FP.</>) <$> D.listDirectory fp
+    foldMap getAllHsFiles fs
   else pure $
-       case FP.takeExtension fp of
-         ".hs"  -> [fp]
-         ".lhs" -> [fp]
-         _      -> []
+    case FP.takeExtension fp of
+      ".hs"  -> [fp]
+      ".lhs" -> [fp]
+      _      -> []
 
 exitCode :: Integer -> ExitCode
 exitCode found
