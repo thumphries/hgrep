@@ -6,3 +6,9 @@ packages:
 flags: {}
 
 extra-package-dbs: []
+
+nix:
+  enable: false
+  packages:
+    - pcre
+    - pkgconfig
