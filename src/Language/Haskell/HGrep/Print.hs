@@ -10,6 +10,8 @@ module Language.Haskell.HGrep.Print (
 import qualified Data.List as L
 import qualified Data.Map as Map
 
+import qualified Text.Printf as T
+
 import qualified Language.Haskell.GHC.ExactPrint as EP
 import qualified Language.Haskell.GHC.ExactPrint.Types as EP
 import qualified Language.Haskell.HsColour as HsColour
@@ -86,7 +88,7 @@ printSearchResult (PrintOpts co lno) (SearchResult anns ast) =
 
     -- Adds line numbers at the start of each line
     prependLineNum :: Int -> [Char] -> [Char]
-    prependLineNum i l = show i <> "  " <> l
+    prependLineNum i l = T.printf "%5d " i <> l
 
 printSearchResultLocation :: PrintOpts -> SearchResult -> [Char]
 printSearchResultLocation opts (SearchResult _anns ast) =
