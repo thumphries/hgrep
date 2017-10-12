@@ -12,6 +12,8 @@ import qualified Options.Applicative as O
 import qualified System.Console.ANSI as ANSI
 import           System.Exit (ExitCode (..), exitWith)
 import qualified System.IO as IO
+import qualified System.Directory as D
+import qualified System.FilePath as FP
 
 
 main :: IO ()
@@ -25,11 +27,30 @@ main = do
       IO.hPutStrLn IO.stderr er
       exitWith (ExitFailure 2)
     Right q -> do
+      -- if no directory provided -> search in current directory
+      files <-
+        case cmdFiles opts of
+          [] -> pure <$> D.getCurrentDirectory
+          x  -> pure x
+      allFiles <- foldMap getAllHsFiles files
       found <-
         fmap sum $
-          for (cmdFiles opts) $ \fp ->
+          for allFiles $ \fp -> do
             hgrep (HGrep.PrintOpts colour (cmdLineNums opts)) q fp
       exitWith (exitCode found)
+
+getAllHsFiles :: FilePath -> IO [FilePath]
+getAllHsFiles fp = do
+  isDir <- D.doesDirectoryExist fp
+  if isDir
+  then do
+    fs <- fmap (fp FP.</>) <$> D.listDirectory fp
+    foldMap getAllHsFiles fs
+  else pure $
+    case FP.takeExtension fp of
+      ".hs"  -> [fp]
+      ".lhs" -> [fp]
+      _      -> []
 
 exitCode :: Integer -> ExitCode
 exitCode found
