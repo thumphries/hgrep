@@ -73,6 +73,12 @@ cd !$
 mafia build
 ```
 
+#### Nix
+```
+git clone https://github.com/thumphries/hgrep.git
+cd !$
+nix-build -E 'with import <nixpkgs> {}; haskellPackages.callCabal2nix "hgrep" ./. {}'
+```
 
 ### Searching for top-level expressions
 
