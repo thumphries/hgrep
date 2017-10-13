@@ -26,6 +26,8 @@ module Language.Haskell.HGrep (
 
 import qualified Control.Exception as E
 
+import qualified Data.List as L
+
 import           Language.Haskell.HGrep.Internal.Data
 import           Language.Haskell.HGrep.Internal.Print
 import           Language.Haskell.HGrep.Prelude
@@ -60,7 +62,8 @@ printResults :: PrintOpts -> [SearchResult] -> IO ()
 printResults opts results = do
   let printedResult = fmap (printWithLocation opts) results
   for_ (foldAdjacent printedResult) $ \(textResult, span) -> do
-    IO.hPutStr   IO.stdout (printSrcSpan opts span)
+    IO.hPutStr   IO.stdout ("      " <> printSrcSpan opts span)
+    IO.hPutStrLn IO.stdout $ "      ┏━━" <> L.replicate 62 '━'
     IO.hPutStrLn IO.stdout textResult
 
 type TextWithLocation = ([Char], SrcLoc.SrcSpan)

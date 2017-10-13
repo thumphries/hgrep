@@ -7,6 +7,7 @@ module Language.Haskell.HGrep.Print (
   ) where
 
 
+import           Data.Char (isSpace)
 import qualified Data.List as L
 import qualified Data.Map as Map
 
@@ -35,9 +36,9 @@ printParseError (ExactPrintParseError (loc, msg)) =
 printSearchResult :: PrintOpts -> SearchResult -> [Char]
 printSearchResult (PrintOpts co lno) (SearchResult anns ast) =
   -- Get the start position of the comment before search result
-  colorize $ case lno of
-      PrintLineNums -> numberedSrc
-      NoLineNums    -> nonNumberedSrc
+  case lno of
+        PrintLineNums -> numberedSrc
+        NoLineNums    -> nonNumberedSrc
   where
     colorize :: [Char] -> [Char]
     colorize anySrc =
@@ -62,16 +63,16 @@ printSearchResult (PrintOpts co lno) (SearchResult anns ast) =
     wholeSrc :: [Char]
     wholeSrc = EP.exactPrint ast anns
 
-    nonEmptySrc :: [[Char]]
-    (_, nonEmptySrc) = L.span null $ L.lines wholeSrc
+    nonEmptySrc :: [Char]
+    (_, nonEmptySrc) = fmap colorize $ L.span isSpace wholeSrc
 
-    nonNumberedSrc = L.unlines nonEmptySrc
+    nonNumberedSrc = nonEmptySrc
 
     -- Doesn't prepent locations when there is no start line number
     printWithLineNums :: Maybe Int -> [Char]
     printWithLineNums Nothing      = nonNumberedSrc
     printWithLineNums (Just start) =
-      L.unlines $ L.zipWith prependLineNum [start..] nonEmptySrc
+      L.unlines $ L.zipWith prependLineNum [start..] (L.lines nonEmptySrc)
 
     annsPairs      = Map.toList anns
     targetAnnPairs = L.filter (isSameLoc .fst) annsPairs
@@ -88,7 +89,7 @@ printSearchResult (PrintOpts co lno) (SearchResult anns ast) =
 
     -- Adds line numbers at the start of each line
     prependLineNum :: Int -> [Char] -> [Char]
-    prependLineNum i l = T.printf "%5d " i <> l
+    prependLineNum i l = T.printf "%5d" i <> " ┃ " <> l
 
 printSearchResultLocation :: PrintOpts -> SearchResult -> [Char]
 printSearchResultLocation opts (SearchResult _anns ast) =
