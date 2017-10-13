@@ -1,0 +1,21 @@
+resolver: lts-7.24
+
+extra-deps:
+  - ghc-exactprint-0.5.4.0
+  - lens-4.15.4
+  - optparse-applicative-0.14.0.0
+  - profunctors-5.2.1
+  - th-abstraction-0.2.6.0
+
+packages:
+- .
+
+flags: {}
+
+extra-package-dbs: []
+
+nix:
+  enable: false
+  packages:
+    - pcre
+    - pkgconfig

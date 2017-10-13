@@ -1,0 +1,14 @@
+resolver: nightly-2017-10-08
+
+packages:
+- .
+
+flags: {}
+
+extra-package-dbs: []
+
+nix:
+  enable: false
+  packages:
+    - pcre
+    - pkgconfig
