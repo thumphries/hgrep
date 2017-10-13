@@ -1,5 +1,7 @@
 # hgrep
 [![Build Status](https://travis-ci.org/thumphries/hgrep.svg?branch=master)](https://travis-ci.org/thumphries/hgrep)
+[![Hackage page (downloads and API reference)](http://img.shields.io/hackage/v/hgrep.svg)](http://hackage.haskell.org/package/hgrep)
+[![Hackage-Deps](https://img.shields.io/hackage-deps/v/hgrep.svg)](http://packdeps.haskellers.com/reverse/hgrep)
 
 Search Haskell source code from the command line.
 
