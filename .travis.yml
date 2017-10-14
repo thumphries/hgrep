@@ -106,6 +106,12 @@ jobs:
   include:
   # The Cabal builds.
   - stage: test
+    env: BUILD=cabal GHCVER=8.0.1 CABALVER=1.24 HAPPYVER=1.19.5 ALEXVER=3.1.7 PUBLISH=true
+    compiler: ": #GHC 8.0.1"
+    addons: {apt: {packages: [cabal-install-1.24,ghc-8.0.1,happy-1.19.5,alex-3.1.7], sources: [hvr-ghc]}}
+    <<: *DEFAULT
+
+  - stage: test
     env: BUILD=cabal GHCVER=8.0.2 CABALVER=1.24 HAPPYVER=1.19.5 ALEXVER=3.1.7 PUBLISH=true
     compiler: ": #GHC 8.0.2"
     addons: {apt: {packages: [cabal-install-1.24,ghc-8.0.2,happy-1.19.5,alex-3.1.7], sources: [hvr-ghc]}}
@@ -126,6 +132,12 @@ jobs:
 
   # The Stack builds.
   - stage: test
+    env: BUILD=stack ARGS="--stack-yaml=stack-8.0.1.yaml"
+    compiler: ": #stack lts-7"
+    addons: {apt: {packages: [libgmp-dev]}}
+    <<: *DEFAULT
+
+  - stage: test
     env: BUILD=stack ARGS=""
     compiler: ": #stack default"
     addons: {apt: {packages: [libgmp-dev]}}
@@ -139,6 +151,12 @@ jobs:
     <<: *DEFAULT
 
   # Build on macOS in addition to Linux
+  - stage: test
+    env: BUILD=stack ARGS="--stack-yaml=stack-8.0.1.yaml"
+    compiler: ": #stack lts-7 osx"
+    os: osx
+    <<: *DEFAULT
+
   - stage: test
     env: BUILD=stack ARGS="" PUBLISH=true
     compiler: ": #stack default osx"
