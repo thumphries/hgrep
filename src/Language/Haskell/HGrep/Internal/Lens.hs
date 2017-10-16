@@ -52,8 +52,9 @@ makeOptics ''VectDecl
 makeOptics ''SpliceDecl
 makeOptics ''DocDecl
 makeOptics ''RoleAnnotDecl
-makeOptics ''ImportDecl
 
+makeOptics ''ImportDecl
+makeOptics ''IE
 
 makeOptics ''HsDataDefn
 makeOptics ''ConDecl

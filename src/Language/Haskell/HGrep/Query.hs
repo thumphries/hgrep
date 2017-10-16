@@ -1,13 +1,13 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RankNTypes #-}
-{-# LANGUAGE AllowAmbiguousTypes #-}
 
 module Language.Haskell.HGrep.Query (
     findTypeDecl
   , findTypeUses
   , findValueDecl
   , findImports
+  , findExports
   ) where
 
 
@@ -24,13 +24,13 @@ import           Language.Haskell.HGrep.Prelude
 
 import qualified FastString
 import qualified HsDecls
-import qualified HsSyn
 import qualified GHC
 import qualified HsTypes
 import qualified OccName
 import qualified RdrName
-import qualified Module as M
 import           SrcLoc (unLoc)
+
+import qualified Module as M
 
 findTypeDecl :: [Char] -> ParsedSource -> [SearchResult]
 findTypeDecl name src =
@@ -56,8 +56,14 @@ findTypeUses name src =
 
 findImports :: [Char] -> ParsedSource -> [SearchResult]
 findImports name src =
-  matchDeclsHs src $
-     _ImportDecl . _2 . _unloc . to (cn name)
+  matchImports src $
+       _ImportDecl . _2 . _unloc . to (compareModuleName name)
+
+findExports :: [Char] -> ParsedSource -> [SearchResult]
+findExports name src =
+  matchExports src $
+       _IEThingAbs . _unloc . to (compareName name)
+    <> _IEThingAll . _unloc . to (compareName name)
 
 typeContains :: [Char] -> HsTypes.HsType Name -> Bool
 typeContains name ty =
@@ -70,27 +76,38 @@ typeContains name ty =
 
 type Name = RdrName.RdrName
 type Declaration = HsDecls.HsDecl Name
-type Module = HsSyn.HsModule M.ModuleName
+type Import = GHC.ImportDecl Name
+type Export = GHC.IE Name
 
 matchDecls :: ParsedSource -> Getting (First Bool) Declaration Bool -> [SearchResult]
 matchDecls src patterns =
   matchDecls' src $ \decl ->
     fromMaybe False (preview patterns decl)
 
-matchDeclsHs :: ParsedSource -> Getting (First Bool) (GHC.ImportDecl RdrName.RdrName) Bool -> [SearchResult]
-matchDeclsHs src patterns =
-  matchDeclsHs' src $ \m ->
+matchImports :: ParsedSource -> Getting (First Bool) Import Bool -> [SearchResult]
+matchImports src patterns =
+  matchImports' src $ \m ->
     fromMaybe False (preview patterns m)
 
-matchDeclsHs' :: ParsedSource -> (GHC.ImportDecl RdrName.RdrName -> Bool) -> [SearchResult]
-matchDeclsHs' (ParsedSource (anns, locMod)) p =
+matchExports :: ParsedSource -> Getting (First Bool) Export Bool -> [SearchResult]
+matchExports src patterns =
+  matchExports' src $ \m ->
+    fromMaybe False (preview patterns m)
+
+matchDecls' :: ParsedSource -> (Declaration -> Bool) -> [SearchResult]
+matchDecls' (ParsedSource (anns, locMod)) p =
+  fmap (SearchResult anns) $
+    L.filter (p . unLoc) (locMod ^. _unloc . _hsmodDecls)
+
+matchImports' :: ParsedSource -> (Import -> Bool) -> [SearchResult]
+matchImports' (ParsedSource (anns, locMod)) p =
   fmap (SearchResult anns) $
     L.filter (p . unLoc) (locMod ^. _unloc . _HsModule . _3)
 
-matchDecls' :: ParsedSource -> (HsDecls.HsDecl RdrName.RdrName -> Bool) -> [SearchResult]
-matchDecls' (ParsedSource (anns, locMod)) p =
+matchExports' :: ParsedSource -> (Export -> Bool) -> [SearchResult]
+matchExports' (ParsedSource (anns, locMod)) p =
   fmap (SearchResult anns) $
-      L.filter (p . unLoc) (locMod ^. _unloc . _hsmodDecls)
+    L.filter (p . unLoc) (locMod ^. _unloc . _hsmodExports . _Just . _unloc)
 
 compareName :: [Char] -> RdrName.RdrName -> Bool
 compareName name n =
@@ -102,8 +119,8 @@ compareName name n =
     _ ->
       False
 
-cn :: [Char] -> M.ModuleName -> Bool
-cn name mn = fastEq name (M.moduleNameFS mn)
+compareModuleName :: [Char] -> M.ModuleName -> Bool
+compareModuleName name mn = fastEq name (M.moduleNameFS mn)
 
 fastEq :: [Char] -> FastString.FastString -> Bool
 fastEq s fs =
