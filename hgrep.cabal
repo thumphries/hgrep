@@ -48,7 +48,7 @@ library
                    , hscolour                       >= 1.24          && < 1.25
                    , lens                           >= 4.15          && < 4.16
                    , template-haskell               >= 2.11          && < 2.13
-
+                   
   exposed-modules:
                      Language.Haskell.HGrep
                      Language.Haskell.HGrep.Query
