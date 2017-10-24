@@ -35,9 +35,11 @@ parseModule hs =
 queryModule :: Query -> ParsedSource -> [SearchResult]
 queryModule q src =
   fold [
-      (HQ.findTypeDecl q src)
-    , (HQ.findTypeUses q src)
-    , (HQ.findValueDecl q src)
+     (HQ.findTypeDecl q src)
+   , (HQ.findTypeUses q src)
+   , (HQ.findValueDecl q src)
+   , (HQ.findImports q src)
+   , (HQ.findExports q src)
     ]
 
 printResults :: PrintOpts -> [SearchResult] -> IO ()

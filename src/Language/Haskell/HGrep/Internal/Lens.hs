@@ -53,6 +53,9 @@ makeOptics ''SpliceDecl
 makeOptics ''DocDecl
 makeOptics ''RoleAnnotDecl
 
+makeOptics ''ImportDecl
+makeOptics ''IE
+
 makeOptics ''HsDataDefn
 makeOptics ''ConDecl
 makeOptics ''HsImplicitBndrs
