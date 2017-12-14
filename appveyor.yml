@@ -22,6 +22,10 @@ environment:
       GHC: ghc-8.2.1
       GHC_URL: "https://downloads.haskell.org/~ghc/8.2.1/ghc-8.2.1-x86_64-unknown-mingw32.tar.xz"
       STACK_YAML: stack-8.2.1.yaml
+    -
+      GHC: ghc-8.2.2
+      GHC_URL: "https://downloads.haskell.org/~ghc/8.2.2/ghc-8.2.2-x86_64-unknown-mingw32.tar.xz"
+      STACK_YAML: stack-8.2.2.yaml
 image: "Visual Studio 2015"
 install:
   - "mkdir c:\\ghc"
