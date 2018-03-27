@@ -149,6 +149,12 @@ jobs:
     addons: {apt: {packages: [libgmp-dev]}}
     <<: *DEFAULT
 
+  - stage: test
+    env: BUILD=stack ARGS="--stack-yaml=stack-8.2.2.yaml"
+    compiler: ": #stack lts-10"
+    addons: {apt: {packages: [libgmp-dev]}}
+    <<: *DEFAULT
+
   # Nightly builds are allowed to fail
   - stage: test
     env: BUILD=stack ARGS="--resolver nightly"
@@ -166,6 +172,12 @@ jobs:
   - stage: test
     env: BUILD=stack ARGS="" PUBLISH=true
     compiler: ": #stack default osx"
+    os: osx
+    <<: *DEFAULT
+
+  - stage: test
+    env: BUILD=stack ARGS="--stack-yaml=stack-8.2.2.yaml"
+    compiler: ": #stack lts-10 osx"
     os: osx
     <<: *DEFAULT
 
