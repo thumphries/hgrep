@@ -31,7 +31,7 @@ import qualified SrcLoc
 
 
 newtype ParsedSource = ParsedSource {
-    unParsedSource :: (ET.Anns, GHC.Located (GHC.HsModule GHC.RdrName))
+    unParsedSource :: (ET.Anns, GHC.Located (GHC.HsModule GHC.GhcPs))
   }
 
 data ParseError =
