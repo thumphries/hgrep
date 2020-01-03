@@ -32,16 +32,16 @@ findTypeDecl :: Query -> ParsedSource -> [SearchResult]
 findTypeDecl q src =
   matchDecls src $ \decl ->
     fromMaybe False . match decl $
-         _TyClD . _DataDecl . _1 . _unloc . to (nameQuery q)
-      <> _TyClD . _SynDecl . _1 . _unloc . to (nameQuery q)
+         _TyClD . _2 . _DataDecl . _2 . _unloc . to (nameQuery q)
+      <> _TyClD . _2 . _SynDecl . _2 . _unloc . to (nameQuery q)
 
 findValueDecl :: Query -> ParsedSource -> [SearchResult]
 findValueDecl q src =
   matchDecls src $ \decl ->
     fromMaybe False . match decl $
-         _ValD . _FunBind . _1 . _unloc . to (nameQuery q)
-      <> _ValD . _VarBind . _1 . to (nameQuery q)
-      <> _SigD . _TypeSig . _1 . to (any (nameQuery q . unLoc))
+         _ValD . _2 . _FunBind . _2 . _unloc . to (nameQuery q)
+      <> _ValD . _2 . _VarBind . _2 . to (nameQuery q)
+      <> _SigD . _2 . _TypeSig . _2 . to (any (nameQuery q . unLoc))
 
 matchDecls :: ParsedSource -> (HsDecls.HsDecl GHC.GhcPs -> Bool) -> [SearchResult]
 matchDecls (ParsedSource (anns, locMod)) p =

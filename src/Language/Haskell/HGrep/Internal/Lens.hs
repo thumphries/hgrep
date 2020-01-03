@@ -49,7 +49,7 @@ makeOptics ''ForeignDecl
 makeOptics ''WarnDecls
 makeOptics ''AnnDecl
 makeOptics ''RuleDecls
-makeOptics ''VectDecl
+-- makeOptics ''VectDecl
 makeOptics ''SpliceDecl
 makeOptics ''DocDecl
 makeOptics ''RoleAnnotDecl

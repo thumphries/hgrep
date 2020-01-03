@@ -31,9 +31,9 @@ executable hgrep
   ghc-options:       -Wall -threaded -rtsopts
   main-is:           hgrep.hs
   build-depends:
-                     base                           >= 4.9
+                     base                           >= 4.9           && < 4.13
                    , hgrep
-                   , ansi-terminal                  >= 0.6.3         && < 0.8
+                   , ansi-terminal                  >= 0.6.3         && < 0.10
                    , directory                      >= 1.2           && < 1.4
                    , filepath                       >= 1.4           && < 1.5
                    , optparse-applicative           >= 0.13          && < 0.15
@@ -44,16 +44,16 @@ library
   hs-source-dirs:    src
   ghc-options:       -Wall
   build-depends:
-                     base                           >= 4.9
-                   , ansi-terminal                  >= 0.6.3         && < 0.8
-                   , bytestring                     >= 0.10.4
-                   , containers                     >= 0.5.7         && < 0.5.13
-                   , ghc                            >= 8.4.1
-                   , ghc-exactprint                 >= 0.5.4.0       && < 0.6
+                     base                           >= 4.9           && < 4.13
+                   , ansi-terminal                  >= 0.6.3         && < 0.10
+                   , bytestring                     >= 0.10.4        && < 0.12
+                   , containers                     >= 0.5.7         && < 0.7
+                   , ghc                            >= 7.10.2        && < 8.7
+                   , ghc-exactprint                 >= 0.5.4.0       && < 0.7
                    , hscolour                       >= 1.24          && < 1.25
-                   , lens                           >= 4.15
+                   , lens                           >= 4.15          && < 4.18
                    , pcre-heavy                     >= 1.0           && < 1.1
-                   , template-haskell               >= 2.11
+                   , template-haskell               >= 2.11          && < 2.15
 
   exposed-modules:
                      Language.Haskell.HGrep
