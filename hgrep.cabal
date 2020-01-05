@@ -9,7 +9,9 @@ license-file:        LICENSE
 category:            Language
 build-type:          Simple
 cabal-version:       >=1.10
-tested-with:         GHC == 8.0.1, GHC == 8.0.2, GHC == 8.2.1
+tested-with:         GHC == 8.0.1, GHC == 8.0.2, GHC == 8.2.2
+    , GHC == 8.4.1, GHC == 8.4.2, GHC == 8.4.3, GHC == 8.4.4, GHC == 8.6.1
+    , GHC == 8.6.2, GHC == 8.6.3, GHC == 8.6.4, GHC == 8.6.5
 extra-source-files:
   README.md
   CHANGELOG.md
