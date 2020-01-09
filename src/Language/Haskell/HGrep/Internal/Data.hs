@@ -3,6 +3,7 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RankNTypes #-}
+{-# LANGUAGE CPP #-}
 module Language.Haskell.HGrep.Internal.Data (
     ParsedSource (..)
   , ParseError (..)
@@ -31,7 +32,11 @@ import qualified SrcLoc
 
 
 newtype ParsedSource = ParsedSource {
+#if !MIN_VERSION_base(4,11,0)
     unParsedSource :: (ET.Anns, GHC.Located (GHC.HsModule GHC.RdrName))
+#else
+    unParsedSource :: (ET.Anns, GHC.Located (GHC.HsModule GHC.GhcPs))
+#endif
   }
 
 data ParseError =

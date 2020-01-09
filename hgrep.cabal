@@ -9,7 +9,9 @@ license-file:        LICENSE
 category:            Language
 build-type:          Simple
 cabal-version:       >=1.10
-tested-with:         GHC == 8.0.1, GHC == 8.0.2, GHC == 8.2.1
+tested-with:         GHC == 8.0.1, GHC == 8.0.2, GHC == 8.2.2
+    , GHC == 8.4.1, GHC == 8.4.2, GHC == 8.4.3, GHC == 8.4.4, GHC == 8.6.1
+    , GHC == 8.6.2, GHC == 8.6.3, GHC == 8.6.4, GHC == 8.6.5
 extra-source-files:
   README.md
   CHANGELOG.md
@@ -31,9 +33,9 @@ executable hgrep
   ghc-options:       -Wall -threaded -rtsopts
   main-is:           hgrep.hs
   build-depends:
-                     base                           >= 4.9           && < 4.11
+                     base                           >= 4.9           && < 4.13
                    , hgrep
-                   , ansi-terminal                  >= 0.6.3         && < 0.8
+                   , ansi-terminal                  >= 0.6.3         && < 0.10
                    , directory                      >= 1.2           && < 1.4
                    , filepath                       >= 1.4           && < 1.5
                    , optparse-applicative           >= 0.13          && < 0.15
@@ -44,16 +46,16 @@ library
   hs-source-dirs:    src
   ghc-options:       -Wall
   build-depends:
-                     base                           >= 4.9           && < 4.11
-                   , ansi-terminal                  >= 0.6.3         && < 0.8
+                     base                           >= 4.9           && < 4.13
+                   , ansi-terminal                  >= 0.6.3         && < 0.10
                    , bytestring                     >= 0.10.4        && < 0.12
-                   , containers                     >= 0.5.7         && < 0.5.13
-                   , ghc                            >= 7.10.2        && < 8.3
-                   , ghc-exactprint                 >= 0.5.4.0       && < 0.6
+                   , containers                     >= 0.5.7         && < 0.7
+                   , ghc                            >= 7.10.2        && < 8.7
+                   , ghc-exactprint                 >= 0.5.4.0       && < 0.7
                    , hscolour                       >= 1.24          && < 1.25
-                   , lens                           >= 4.15          && < 4.16
+                   , lens                           >= 4.15          && < 4.18
                    , pcre-heavy                     >= 1.0           && < 1.1
-                   , template-haskell               >= 2.11          && < 2.13
+                   , template-haskell               >= 2.11          && < 2.15
 
   exposed-modules:
                      Language.Haskell.HGrep

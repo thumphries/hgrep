@@ -7,6 +7,7 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TypeSynonymInstances #-}
 {-# LANGUAGE UndecidableInstances #-}
+{-# LANGUAGE CPP #-}
 module Language.Haskell.HGrep.Internal.Lens where
 
 
@@ -49,7 +50,9 @@ makeOptics ''ForeignDecl
 makeOptics ''WarnDecls
 makeOptics ''AnnDecl
 makeOptics ''RuleDecls
+#if !MIN_VERSION_base(4,11,0)
 makeOptics ''VectDecl
+#endif
 makeOptics ''SpliceDecl
 makeOptics ''DocDecl
 makeOptics ''RoleAnnotDecl
